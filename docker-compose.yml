@@ -27,3 +27,6 @@ services:
       - ./front:/app
     ports:
       - 8080:3000
+
+    depends_on:
+      - back

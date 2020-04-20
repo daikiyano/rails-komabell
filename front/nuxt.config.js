@@ -28,6 +28,7 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    'plugins/axios'
   ],
   /*
   ** Nuxt.js dev-modules
@@ -40,7 +41,14 @@ export default {
   modules: [
     // Doc: https://buefy.github.io/#/documentation
     'nuxt-buefy',
+    '@nuxtjs/axios',
   ],
+  axios: {
+    proxy: true
+  },
+  proxy: {
+    '/api/': { target: 'http://back:3000', pathRewrite: { '^/api/': '/' } }
+  },
   /*
   ** Build configuration
   */
