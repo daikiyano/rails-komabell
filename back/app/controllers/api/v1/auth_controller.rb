@@ -5,11 +5,11 @@ module Api
       def login
         user = User.find_by(email: params[:email])
         if user && user.authenticate(params[:password])
-          payload = {user_id: user.id}
+          payload = {user_id: user.id,email: user.email}
           token = encode_token(payload)
-          render json: {user: user ,jwt: token,success: "Welcome back, #{user.email}"}
+          render json: {jwt: token,success: "Welcome back, #{user.email}"}
         else
-          render json: {failure: "Log in failed! Email or password invalid!"}
+          response_unauthorized
         end
       end
 

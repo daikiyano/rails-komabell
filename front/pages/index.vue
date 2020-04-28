@@ -37,6 +37,7 @@
         No other internal dependency
       </card>
     </div>
+    {{ user.email }}
   </section>
 </template>
 
@@ -48,6 +49,12 @@ export default {
 
   components: {
     Card
-  }
+  },
+  computed: {
+    user() {
+      return this.$auth.user;
+      console.log(this.$auth.user)
+    }
+  },
 }
 </script>

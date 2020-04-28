@@ -42,12 +42,31 @@ export default {
     // Doc: https://buefy.github.io/#/documentation
     'nuxt-buefy',
     '@nuxtjs/axios',
+    '@nuxtjs/auth',
   ],
+  auth: {
+    redirect: {
+      login: '/login',   // 未ログイン時に認証ルートへアクセスした際のリダイレクトURL
+      logout: '/login',  // ログアウト時のリダイレクトURL
+      callback: false,   // Oauth認証等で必要となる コールバックルート
+      home: '/',         // ログイン後のリダイレクトURL
+    },
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: '/api/v1/login', method: 'post', propertyName: 'jwt' },
+          user: false,
+          logout: false
+        },
+      }
+    }
+  },
   axios: {
-    proxy: true
+    // proxy: true,
+    baseURL: 'http://localhost:3000'
   },
   proxy: {
-    '/api/': { target: 'http://back:3000', pathRewrite: { '^/api/': '/' } }
+    // '/api/': { target: 'http://back:3000', pathRewrite: { '^/api/': '/' } }
   },
   /*
   ** Build configuration

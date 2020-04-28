@@ -18,7 +18,6 @@ module Api
       def user_params
         params.permit(:email,:password)
       end
->>>>>>> 74abad4
     end
   end
 end
