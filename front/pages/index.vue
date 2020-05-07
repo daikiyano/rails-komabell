@@ -1,4 +1,8 @@
 <template>
+<div>
+<div class="card">
+aa
+</div>
   <section class="section">
     <div class="columns is-mobile">
       {{email}}
@@ -14,6 +18,7 @@
     </div>
     
   </section>
+  </div>
 </template>
 
 <script>

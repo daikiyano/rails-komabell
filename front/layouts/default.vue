@@ -16,16 +16,16 @@
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
       <a class="navbar-item">
-        Home
+        My 本棚
       </a>
 
       <a class="navbar-item">
-        Documentation
+        新着本
       </a>
 
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link">
-          More
+          本を探す
         </a>
 
         <div class="navbar-dropdown">
@@ -49,7 +49,7 @@
     <div class="navbar-end">
       <div class="navbar-item">
         <div class="buttons">
-          <a @click="isModalForm=true; FormComponent='SignUp'" class="button is-primary" v-if="!this.$auth.loggedIn">
+          <a @click="isModalForm=true; FormComponent='SignUp'" v-if="!this.$auth.loggedIn">
             <strong>会員登録</strong>
           </a>
           <a @click="isModalForm=true; FormComponent='Login'" class="button is-light" v-if="!this.$auth.loggedIn">

@@ -5,6 +5,7 @@
                  trap-focus
                  :destroy-on-hide="false"
                  aria-role="dialog"
+                 width="1000"
                  :on-cancel="closeModal"
                  aria-modal>
         <div class="modal-card" style="width: auto">
@@ -50,3 +51,9 @@
         }
     }
 </script>
+
+<style>
+.modal-background {
+background-color:rgba(255,255,255,.97);
+}
+</style>

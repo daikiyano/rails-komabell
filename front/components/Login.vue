@@ -1,11 +1,13 @@
 <template>
     <div>
-<ValidationObserver ref="observer" v-slot="{ passes }">
+        <div class="card-content">
+        <div v-if="this.step === 1">
+        <ValidationObserver ref="observer" v-slot="{ passes }">
+            <section class="modal-card-body">
         <header class="modal-card-head">
             <p class="modal-card-title">メールアドレスでログインする</p>
         </header>
-
-        <section class="modal-card-body">
+        <section>
             <EmailInput v-model="email"/>
             <ul style="list-style:none; color:red;">
                  <!-- <li v-for="error in errors" :key="error"> -->
@@ -17,10 +19,29 @@
         </section>
 
         <footer class="modal-card-foot">
-            <button class="button" type="button" @click="close()">閉じる</button>
-            <b-button class="button" type="is-success" @click="passes(login)">ログイン</b-button>
+            <!-- <button class="button" type="button" @click="close()">閉じる</button> -->
+            <b-button class="button" type="is-dark" @click="passes(login)">ログイン</b-button>
         </footer>
-          </ValidationObserver>
+        </section>
+        </ValidationObserver>
+        </div>
+        <div v-else-if="this.step === 2">
+            
+            <section class="modal-card-body">
+                <header class="modal-card-head">
+                <p class="modal-card-title">確認メールを送信しました</p>
+                </header>
+                <p>
+                {{ email }}宛に確認メールを送信しました。<br>
+                15分以内に添付したリンクをクリックしてログインを完了させてください。
+                </p>
+                <footer class="modal-card-foot">
+                    <button class="button" type="is-dark" @click="close()">閉じる</button>
+                </footer>
+            </section>
+            
+        </div>
+        </div>
     </div>
 </template>
 
@@ -38,9 +59,10 @@ import EmailInput from '~/components/Form/EmailInput.vue'
         },
         data() {
             return {
-                email : '',
+                email : "",
                 errors: "",
-                serverError : ""
+                serverError : "",
+                step : 1
                  }
         },
         methods: {
@@ -59,18 +81,20 @@ import EmailInput from '~/components/Form/EmailInput.vue'
                         email: this.email
                     })
                     .then(( res ) => {
-                        console.log(res.error)
-                        console.log("モデルエラー")
-                        this.errors = res.error;
-                        this.$refs.observer.reset();
+                        console.log("clrea")
+                       this.step = 2
                     })
                     .catch (error => {
-                        console.log(error)
-                        this.serverError = "サーバー内で問題が発生しました。"
-                        console.log(this.error)
+                        if (error.response.status == "422") {
+                            console.log(error.response)
+                            this.errors = "メールアドレスが未登録です";
+                        }　else {
+                            this.serverError = "サーバー内で問題が発生しました。"
+                            this.$refs.observer.reset();
+                        }
                     })   
-                    }
-                },
+                }
+            },
             async user_is_authed () {
                 console.log(`Bearer ${localStorage.idToken}`)
                 const ret = await this.$axios.$get('/api/v1/user_is_authed',
@@ -89,3 +113,18 @@ import EmailInput from '~/components/Form/EmailInput.vue'
       
     }
 </script>
+
+<style>
+.modal-card-body {
+    box-shadow: 0 2px 10px rgba(0,0,0,.15);
+}
+.modal-card-head {
+    background-color: white;
+    border-bottom: 1px solid white;
+}
+
+.modal-card-foot {
+    background-color: white;
+    border-top: 1px solid white;
+}
+</style>

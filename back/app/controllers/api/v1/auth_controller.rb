@@ -13,7 +13,10 @@ module Api
             render json: {test: "send_email" ,success: "Welcome back, #{user.email}"}
           else
             logger.debug(user.errors.full_messages)
-            render json: {error: user.errors.full_messages }
+            # rescue ActiveRecord::RecordNotFound
+            # rescue ActiveRecord::RecordNotFound
+            response_unprocessable_entity
+            # render json: {error: user.errors.full_messages }
         end
       end
 
@@ -24,9 +27,9 @@ module Api
         url = "http://localhost:8080?token=" + user.login_token
         UserMailer.magic_login_email(user,url).deliver_later
         render json: {test: "send_email" ,success: "Welcome back, #{user.email}"}
-        
         rescue ActiveRecord::RecordNotFound
-          render json: { error: 'メールアドレスが未登録です' }
+        response_unprocessable_entity
+        # render json: { error: 'メールアドレスが未登録です' }
       end
 
       # マジックリンクのtokenが有効か確認し、有効だったらemailをrenderする

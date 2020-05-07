@@ -1,7 +1,7 @@
 <template>
     <div>
         <ValidationProvider vid="email" rules="required|email" :name="$attrs.name || $attrs.label" v-slot="{ errors, valid }">
-            <b-field label="Email"
+            <b-field label="メールアドレス"
                 :type="{ 'is-danger': errors[0], 'is-success': valid } "
                 :message="errors"
             >
