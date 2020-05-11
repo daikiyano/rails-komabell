@@ -19,6 +19,7 @@
                         <a @click="ChangeForm()">既にアカウントをお持ちの方</a>
                         <footer class="modal-card-foot">
                             <!-- <button class="button" type="button" @click="close()">閉じる</button> -->
+                            <b-button class="button" type="is-dark" @click="authenticate">google</b-button>
                             <b-button class="button" type="is-dark" @click="passes(login)">会員登録</b-button>
                         </footer>
                     </section>
@@ -91,6 +92,9 @@ import { ValidationObserver, ValidationProvider } from 'vee-validate';
                     })    
                 }
                 },
+            authenticate(){
+                this.$auth.loginWith('google')
+            }
 
         }
     }

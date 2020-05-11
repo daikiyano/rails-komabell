@@ -14,7 +14,7 @@ aa
       @isCloseModal="closeModal" 
       @ChangeForm="ChangeForm($event)" 
       />
-      
+      {{this.$auth.user}}
     </div>
     
   </section>
@@ -39,6 +39,10 @@ export default {
   },
 
     created () {
+      
+
+
+     
     if (this.$route.query.token) {
       this.$axios.$post('http://127.0.0.1:3000/api/v1/token_check',{
       token : this.$route.query.token

@@ -31,6 +31,10 @@ export default {
     'plugins/axios',
     { src: '@/plugins/vee-validate' }
   ],
+
+  router: {
+    // middleware: 'routing'
+  },
   /*
   ** Nuxt.js dev-modules
   */
@@ -49,7 +53,7 @@ export default {
     redirect: {
       login: '/login',   // 未ログイン時に認証ルートへアクセスした際のリダイレクトURL
       logout: '/login',  // ログアウト時のリダイレクトURL
-      callback: false,   // Oauth認証等で必要となる コールバックルート
+      callback: '/callback',   // Oauth認証等で必要となる コールバックルート
       home: '/',         // ログイン後のリダイレクトURL
     },
     strategies: {
@@ -58,8 +62,10 @@ export default {
           login: { url: '/api/v1/login', method: 'post', propertyName: 'jwt' },
           user: false,
           logout: false
-        },
-      }
+        }
+      },
+      // google: {
+      // },
     }
   },
   axios: {
