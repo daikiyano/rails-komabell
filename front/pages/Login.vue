@@ -1,16 +1,11 @@
 <template>
 <div>
-<form @submit.prevent="login()">
+<form @submit.prevent>
     <input id="name" v-model="email" type="email" name="name">
-    <input v-model="password" type="password">
     <button type="submit" @click="login()">ログイン</button>
-    
-
 </form>
 <button @click="user_is_authed()">auth 確認</button>
 <button @click="auto_login()">User 情報</button>
-<button @click="logout()">ログアウト</button>
-
 </div>
 </template>
 
@@ -24,35 +19,16 @@ export default {
   },
  
   methods: {
-    
     async login() {
-        await this.$auth.loginWith('local',{
-        data: {
-            // auth: {
-              email: this.email,
-              password: this.password
-            // }
-          }
-        
-        }).then((response) => {
-          console.log(response.data.jwt)
-          localStorage.setItem('idToken',response.data.jwt)
-          console.log(response)
-          console.log(this.$auth.$state)
-          console.log(this.$auth.loggedIn)
-          console.log(this.$auth.user)
-        },
-        (error) => {
-          console.log(this.$auth.loggedIn)
-          console.log(error)
-        })
-        
-      
-    },
-   logout() {
-      this.$auth.logout();
-      localStorage.clear()
-      console.log(this.$auth.loggedIn)
+      await this.$axios.$post('/api/v1/create',{ 
+        email: this.email
+      })
+      .then(( res ) => {
+        console.log(res)
+      })
+      .catch ( error => {
+        console.log(error)
+      })   
     },
     async user_is_authed () {
       console.log(`Bearer ${localStorage.idToken}`)

@@ -4,7 +4,10 @@ Rails.application.routes.draw do
     namespace 'v1' do
       #Sign Up用のみ
       resource :users, only: [:create]
+      post "/create", to: "auth#create"
+      post "/signin", to: "auth#signin"
       post "/login", to: "auth#login"
+      post "/token_check", to: "auth#token_check"
       get "/auto_login", to: "auth#auto_login"
       get "/user_is_authed", to: "auth#user_is_authed"
     end

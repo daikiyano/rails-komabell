@@ -50,6 +50,10 @@ class ApplicationController < ActionController::API
       def response_unauthorized
         render status: 401, json: { status: 401, message: 'Unauthorized' }
       end
+
+      def response_unprocessable_entity
+        render status: 422, json: { status: 422, message: 'unprocessable_entity' }
+      end
       
       # 404 Not Found
       def response_not_found(class_name = 'page')

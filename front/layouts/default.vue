@@ -1,49 +1,75 @@
 <template>
   <div>
-    <nav
-      class="navbar header has-shadow is-primary"
-      role="navigation"
-      aria-label="main navigation"
-    >
-      <div class="navbar-brand">
-        <a
-          class="navbar-item"
-          href="/"
-        >
-          <img
-            src="~assets/buefy.png"
-            alt="Buefy"
-            height="28"
-          >
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="https://bulma.io">
+      <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
+    </a>
+
+    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      <a class="navbar-item">
+        My 本棚
+      </a>
+
+      <a class="navbar-item">
+        新着本
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          本を探す
         </a>
 
-        <div class="navbar-burger">
-          <span />
-          <span />
-          <span />
+        <div class="navbar-dropdown">
+          <a class="navbar-item">
+            About
+          </a>
+          <a class="navbar-item">
+            Jobs
+          </a>
+          <a class="navbar-item">
+            Contact
+          </a>
+          <hr class="navbar-divider">
+          <a class="navbar-item">
+            Report an issue
+          </a>
         </div>
       </div>
-    </nav>
+    </div>
 
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="buttons">
+          <a @click="isModalForm=true; FormComponent='SignUp'" v-if="!this.$auth.loggedIn">
+            <strong>会員登録</strong>
+          </a>
+          <a @click="isModalForm=true; FormComponent='Login'" class="button is-light" v-if="!this.$auth.loggedIn">
+            ログイン
+          </a>
+          <b-button class="button" type="is-success" v-if="this.$auth.loggedIn" @click="logout()">ログアウト</b-button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
     <section class="main-content columns">
-      <aside class="column is-2 section">
-        <p class="menu-label is-hidden-touch">
-          General
-        </p>
-        <ul class="menu-list">
-          <li
-            v-for="(item, key) of items"
-            :key="key"
-          >
-            <nuxt-link
-              :to="item.to"
-              exact-active-class="is-active"
-            >
-              <b-icon :icon="item.icon" /> {{ item.title }}
-            </nuxt-link>
-          </li>
-        </ul>
-      </aside>
+     
+      <Modal :isModalForm="this.isModalForm" 
+      :FormComponent="this.FormComponent"   
+      @isCloseModal="closeModal" 
+      @ChangeForm="ChangeForm($event)" 
+      />
+     
 
       <div class="container column is-10">
         <nuxt />
@@ -53,22 +79,40 @@
 </template>
 
 <script>
+  import Login from '~/components/Login.vue'
+  import SignUp from '~/components/SignUp.vue'
+    import Modal from '~/components/Modal.vue'
+
+
 export default {
+
+
+  components: {
+    Login,
+    SignUp,
+    Modal
+  },
   data () {
     return {
-      items: [
-        {
-          title: 'Home',
-          icon: 'home',
-          to: { name: 'index' }
-        },
-        {
-          title: 'Inspire',
-          icon: 'lightbulb',
-          to: { name: 'inspire' }
-        }
-      ]
+     isModalForm : false,
+     FormComponent : ""
+     
+    }
+  },
+  methods: {
+    closeModal () {
+      this.isModalForm = false
+    },
+    ChangeForm(FormComponent) {
+      console.log(FormComponent)
+      this.FormComponent = FormComponent
+    },
+    logout() {
+      this.$auth.logout();
+      localStorage.clear()
+      console.log(this.$auth.loggedIn)
     }
   }
+
 }
 </script>
