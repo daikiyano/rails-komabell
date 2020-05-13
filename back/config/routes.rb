@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     namespace 'v1' do
       #Sign Up用のみ
       get "/search", to: "books#search"
+      get 'books/:isbn' => 'books#show'
       resource :users, only: [:create]
       post "/create", to: "auth#create"
       post "/signin", to: "auth#signin"

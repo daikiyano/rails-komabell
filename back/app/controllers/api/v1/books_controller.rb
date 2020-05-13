@@ -2,17 +2,57 @@ module Api
     module V1 
 
         class BooksController < ApplicationController
-            skip_before_action :require_login, only: [:search]
+            skip_before_action :require_login, only: [:search,:show]
+
+            PER_PAGE = "60"
 
             def search
-                @books = RakutenWebService::Books::Book.search(title: "ruby")
+                @books = RakutenWebService::Books::Book.search(booksGenreId: "001005")
                 # @root = RakutenWebService::Ichiba::Genre.root # root genre
-
-
-                 render json: { status: 'success', data: @books }
-                   
+            #    ビジネス
+                # 101905
+                # コンピューター
+                # 101912
+                page = "1"
+                url = "https://qiita.com/api/v2/tags?page=" + page + "&per_page=" + PER_PAGE + "&sort=count"
+                uri = URI.parse(url)
+                response = Net::HTTP.get(uri)
                 
+                result = JSON.parse(response)
+                logger.debug(result)
+                 render json: { status: 'success', data: @books,tag: result }
+               
+            end
+
+            def show
+                begin
+                    @books = RakutenWebService::Books::Book.search(isbn: params[:isbn])
+                    render json: { status: 'success', data: @books }
+                rescue => e
+                    logger.error e
+                    response_not_found
+                end
+
+                
+                # json_request = JSON.parse(response)
+                # for object in json_request do
+                #     logger.debug(object["id"])
+                #     logger.debug(object["icon_url"])
+                # end
+              
             end
         end
     end
 end
+
+
+# @books = RakutenWebService::Books::Book.search(isbn: "001020",sort:"sales")
+ #  ビジネスヒット
+#  @books = RakutenWebService::Books::Book.search(booksGenreId: "001020",sort:"sales")
+
+                #  @books = RakutenWebService::Books::Book.search(booksGenreId: "001006",sort:"reviewCount")
+
+                #  コンピューター新着
+                #  001005
+                #  ビジネス経済新着
+                #  001006
