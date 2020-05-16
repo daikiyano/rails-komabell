@@ -4,7 +4,7 @@ module Api
         class BooksController < ApplicationController
             skip_before_action :require_login, only: [:search,:show]
 
-            PER_PAGE = "60"
+            PER_PAGE = "100"
 
             def search
                 @books = RakutenWebService::Books::Book.search(booksGenreId: "001005")
@@ -18,9 +18,19 @@ module Api
                 uri = URI.parse(url)
                 response = Net::HTTP.get(uri)
                 
-                result = JSON.parse(response)
-                logger.debug(result)
-                 render json: { status: 'success', data: @books,tag: result }
+                results = JSON.parse(response)
+                logger.debug(results)
+
+                for result in results do
+                    if result["id"] == "初心者"
+                        logger.debug(result["id"])
+                    end
+                    logger.debug(result["id"])
+                    logger.debug(result["icon_url"])
+                   
+                       
+                end
+                 render json: { status: 'success', data: @books,tag: results }
                
             end
 
