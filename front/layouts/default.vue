@@ -49,6 +49,9 @@
     <div class="navbar-end">
       <div class="navbar-item">
         <div class="buttons">
+          <nuxt-link to="/users/mypage" type="is-success" class="button" v-if="this.$auth.loggedIn">
+            <strong>マイページ</strong>
+          </nuxt-link>
           <a @click="isModalForm=true; FormComponent='SignUp'" v-if="!this.$auth.loggedIn">
             <strong>会員登録</strong>
           </a>

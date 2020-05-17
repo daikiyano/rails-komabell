@@ -45,6 +45,7 @@ Rails.application.configure do
     :authentication => 'plain',
     :user_name => ENV.fetch("USER_NAME"),
     :password => ENV.fetch("PASSWORD")
+   
   }
 
   config.action_mailer.perform_caching = false

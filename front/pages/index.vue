@@ -1,23 +1,36 @@
 <template>
 <div>
-<div class="card">
-aa
-</div>
   <section class="section">
     <div class="columns is-mobile">
-      {{email}}
-      <!-- <button @click="user_is_authed()">auth 確認</button>
-<button @click="auto_login()">User 情報</button> -->
-<button @click="logout()">ログアウト</button>
-<Modal :isModalForm="this.isModalForm" 
-      :FormComponent="this.FormComponent"   
-      @isCloseModal="closeModal" 
-      @ChangeForm="ChangeForm($event)" 
-      />
-      {{this.$auth.user}}
+      <!-- {{email}}
+    <button @click="user_is_authed()">auth 確認</button>
+<button @click="auto_login()">User 情報</button> 
+<button @click="logout()">ログアウト</button>  -->
+    <Modal :isModalForm="this.isModalForm" 
+          :FormComponent="this.FormComponent"   
+          @isCloseModal="closeModal" 
+          @ChangeForm="ChangeForm($event)" 
+          />
+      <!-- {{this.$auth.user}} -->
     </div>
     
+
   </section>
+<!-- <div v-for="(tag,index) in this.tags" :key="index" style="box-shadow: 0 1px 16px 0 rgba(0, 0, 0, 0.15);　display: inline-block; margin: 10px 20px; text-align: center;">
+      {{tag.id}}<img :src="tag.icon_url" alt="TOP本"> 
+
+     
+    </div> -->
+
+
+
+    <div v-for="(book,index) in this.books" :key="index" style="box-shadow: 0 1px 16px 0 rgba(0, 0, 0, 0.15);　display: inline-block; margin: 10px 20px; text-align: center;">
+      <nuxt-link :to="{name:'books-id',params:{id:book.params.isbn}}">
+      <img :src="book.params.largeImageUrl" alt="TOP本"> 
+      <!-- {{book.params.itemCaption}}  
+      {{book.params.isbn}} -->
+      </nuxt-link>  
+    </div>
   </div>
 </template>
 
@@ -34,15 +47,36 @@ export default {
     email : "",
     error: "",
     isModalForm : false,
-    FormComponent : ""
+    FormComponent : "",
+    books : "",
+    tags : ""
     }
   },
 
     created () {
+
+      this.$axios.$get('http://127.0.0.1:3000/api/v1/search')
+      .then(res => {
+        this.books = ""
+        console.log(res.tag)
+      this.books = res.data
+      this.tags = res.tag
+        })
+    .catch ( error => {
+      if (error.response.status == "401") {
+          console.log("tokenが無効です")
+          // this.error = "Tokenが無効です"
+          this.$buefy.toast.open({
+            duration: 5000,
+            message: 'サーバー内でも問題が発生しました',
+            type: 'is-danger'
+          })
+         
+
+      }
+        })
       
 
-
-     
     if (this.$route.query.token) {
       this.$axios.$post('http://127.0.0.1:3000/api/v1/token_check',{
       token : this.$route.query.token
@@ -79,7 +113,7 @@ export default {
 
 methods: {
 async login() {
-        await this.$auth.loginWith('local',{
+      await this.$auth.loginWith('local',{
         data: {
               email: this.email
           }

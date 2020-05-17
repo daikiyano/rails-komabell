@@ -5,20 +5,19 @@
                 :type="{ 'is-danger': errors[0], 'is-success': valid } "
                 :message="errors"
             >
+            {{value}}
                 <b-input
-                    v-model="innerValue"
                     type="email"
                     placeholder="メールアドレス"
                     maxlength="30"
+                    @input="innerValue"
+                   :value="value"
                 >
                 </b-input>
             </b-field>
         </ValidationProvider>
     </div>
 </template>
-
-
-
 <script>
      import { ValidationObserver, ValidationProvider } from 'vee-validate';
 
@@ -28,22 +27,17 @@
             ValidationObserver,
             ValidationProvider
         },
-
-        data() {
-            return {
-                innerValue: ""
+        props: {
+            'value': {
+            type: String
             }
         },
-    watch: {
-        innerValue(newVal) {
-        this.$emit("input", newVal);
-        },
-    // Handles external model changes.
-    // value(newVal) {
-    //   this.innerValue = newVal;
-    // }
-    },
+
         methods: {
+            innerValue(newVal) {
+            console.log(newVal)
+        this.$emit("input", newVal);
+        }
             
         }
     }
