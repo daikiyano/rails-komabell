@@ -8,7 +8,7 @@
             <p class="modal-card-title">メールアドレスでログインする</p>
         </header>
         <section>
-            <EmailInput v-model="email"/>
+            <EmailInput v-model="email" />
             <ul style="list-style:none; color:red;">
                  <!-- <li v-for="error in errors" :key="error"> -->
                     {{ errors }}

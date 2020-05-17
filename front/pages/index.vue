@@ -16,11 +16,11 @@
     
 
   </section>
-<div v-for="(tag,index) in this.tags" :key="index" style="box-shadow: 0 1px 16px 0 rgba(0, 0, 0, 0.15);　display: inline-block; margin: 10px 20px; text-align: center;">
+<!-- <div v-for="(tag,index) in this.tags" :key="index" style="box-shadow: 0 1px 16px 0 rgba(0, 0, 0, 0.15);　display: inline-block; margin: 10px 20px; text-align: center;">
       {{tag.id}}<img :src="tag.icon_url" alt="TOP本"> 
 
      
-    </div>
+    </div> -->
 
 
 
@@ -120,7 +120,7 @@ async login() {
         
         }).then((response) => {
           console.log(response.data.token)
-          // localStorage.setItem('idToken',response.data.token)
+          localStorage.setItem('idToken',response.data.token)
           console.log(response)
         },
         (error) => {

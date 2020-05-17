@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_16_044307) do
+ActiveRecord::Schema.define(version: 2020_05_17_065859) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "skill_categories", force: :cascade do |t|
+    t.string "tag_name", null: false
+    t.string "icon_url"
+    t.integer "followers_count"
+    t.integer "items_count"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email"

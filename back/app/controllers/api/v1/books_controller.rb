@@ -4,7 +4,6 @@ module Api
         class BooksController < ApplicationController
             skip_before_action :require_login, only: [:search,:show]
 
-            PER_PAGE = "100"
 
             def search
                 @books = RakutenWebService::Books::Book.search(booksGenreId: "001005")
@@ -13,24 +12,7 @@ module Api
                 # 101905
                 # コンピューター
                 # 101912
-                page = "1"
-                url = "https://qiita.com/api/v2/tags?page=" + page + "&per_page=" + PER_PAGE + "&sort=count"
-                uri = URI.parse(url)
-                response = Net::HTTP.get(uri)
-                
-                results = JSON.parse(response)
-                logger.debug(results)
-
-                for result in results do
-                    if result["id"] == "初心者"
-                        logger.debug(result["id"])
-                    end
-                    logger.debug(result["id"])
-                    logger.debug(result["icon_url"])
-                   
-                       
-                end
-                 render json: { status: 'success', data: @books,tag: results }
+                 render json: { status: 'success', data: @books}
                
             end
 
@@ -42,14 +24,6 @@ module Api
                     logger.error e
                     response_not_found
                 end
-
-                
-                # json_request = JSON.parse(response)
-                # for object in json_request do
-                #     logger.debug(object["id"])
-                #     logger.debug(object["icon_url"])
-                # end
-              
             end
         end
     end
