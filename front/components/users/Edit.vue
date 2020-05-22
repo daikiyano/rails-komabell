@@ -47,17 +47,17 @@
                 v-model="tags"
                :data="filteredTags"
                 autocomplete
-                :allow-new="allowNew"
                 :open-on-focus="openOnFocus"
                 field="filteredTags"
                 icon="label"
+                @input="hey"
                 placeholder="Add a tag"
                 @typing="getFilteredTags">
             </b-taginput>
         </b-field>
         <pre style="max-height: 400px"><b>Tags:</b>{{ tags }}</pre>
     </section>
-    {{filteredTags}}
+    <!-- {{filteredTags}} -->
     email  *String Not NULL,UNIQUE,MAX=25*
 *  username, *String,Not null,UNIQUE,MAX=25*
 * gender *TinyInt*
@@ -100,12 +100,20 @@ export default {
     github_id : "",
     filteredTags : [],
     tags: [],
+    data:[],
     allowNew: false,
     openOnFocus: false
 
 
     }
   },
+    watch: {
+        filteredTags: function(val) {
+            if (val.length === 0){
+                this.filteredTags = this.data
+            }
+        }
+    },
    created() {
        this.fetchUser()
        this.FetchCategories()
@@ -116,6 +124,7 @@ export default {
       .then(res => {
         for (var i = 0;  i < res.tag.length;  i++){
             this.filteredTags.push(res.tag[i]["tag_name"]);
+            this.data.push(res.tag[i]["tag_name"]);
         }
         
     //   this.filteredTags = res.tag
@@ -148,19 +157,23 @@ export default {
 
          getFilteredTags(text) {
                 this.filteredTags = this.filteredTags.filter((option) => {
-                    console.log(option)
+                    // console.log(option)
                     return option
                         .toString()
                         .toLowerCase()
                         .indexOf(text.toLowerCase()) >= 0
-                        
-                        
+                     
                 
                 })
-                this.filteredTags = []
-                console.log(this.filteredTags)
-                this.FetchCategories()
+                
+                // console.log(this.filteredTags)
+                // this.FetchCategories()
+            },
+            hey () {
+                console.log("hey")
+                this.filteredTags = this.data
             }
+
     }
     
 }
