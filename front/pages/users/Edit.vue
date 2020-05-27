@@ -1,10 +1,13 @@
 <template>
 <div>
-    <h1>Edit</h1>
+
+    <h1>My Edit</h1>
+        <MyPageTab :activeTab="activeTab" />
+     <h1>Edit</h1>
     <section>
-         <EmailInput  v-model="user.email"/>
+         <EmailInput  v-model="form.email"/>
          <b-field label="ユーザー名">
-            <b-input v-model="user.username"></b-input>
+            <b-input v-model="form.username"></b-input>
         </b-field>
          <b-field label="性別" v-model="form.gender">
             <b-select placeholder="性別"> 
@@ -26,8 +29,8 @@
                 trap-focus>
             </b-datepicker>
         </b-field>
-        <b-field label="自己紹介"  v-model="form.description">
-            <b-input maxlength="200" type="textarea"></b-input>
+        <b-field label="自己紹介">
+            <b-input maxlength="200" type="textarea" v-model="form.description"></b-input>
         </b-field>
         <b-field label="Twitterアカウント">
             <b-input v-model="form.twitter_id"></b-input>
@@ -76,31 +79,26 @@
 * *image* *String,MAX=120*
 * login_token*String,MAX=120*
 * login_token_valid_until*String,MAX=120*
-
    
 </div>
 </template>
-
 <script>
+import MyPageTab from '~/components/users/MyPageTab.vue'
 import EmailInput from '~/components/Form/EmailInput.vue'
-     import { ValidationObserver, ValidationProvider } from 'vee-validate';
+import { ValidationObserver, ValidationProvider } from 'vee-validate';
+
 
 
 export default {
     components: {
-            EmailInput,
-            ValidationObserver,
-            ValidationProvider  
-        },
-        props: {
-            'user': {
-           type: Object,
-            required: true
-            }
-        },
-       
-  data() {
+        MyPageTab,
+        EmailInput,
+        ValidationObserver,
+        ValidationProvider 
+    },
+    data() {
     return {
+        user : "",
         form : {
             email : "",
             username : "",
@@ -118,22 +116,25 @@ export default {
         data:[],
         allowNew: false,
         openOnFocus: false,
-        showWeekNumber: false
+        showWeekNumber: false,
+        activeTab: 1,
     }
+    
   },
-    watch: {
+  watch: {
         filteredTags: function(val) {
             if (val.length === 0){
                 this.filteredTags = this.data
             }
         }
     },
-   created() {
+    created() {
        this.fetchUser()
        this.FetchCategories()
     },
-    methods: {
-        FetchCategories () {
+
+   methods: {
+       FetchCategories () {
             this.$axios.$get('http://127.0.0.1:3000/api/v1/fetch_categories')
             .then(res => {
                 for (var i = 0;  i < res.tag.length;  i++) {
@@ -153,15 +154,24 @@ export default {
             }
         })
     },
-        // ユーザー情報取得
-        async fetchUser () {
+    async fetchUser () {
             const ret = await this.$axios.$get('/api/v1/auto_login',{ 
                 headers:{"Authorization" :`Bearer ${localStorage.idToken}`
                 }
              })
              .then(res => {
                  console.log(res)
-                 this.email = res.email
+                 this.form.username = res.username
+                 this.form.email = res.email
+                 this.form.age = res.age
+                 this.form.birth = res.birth
+                 this.form.description = res.description
+                 this.form.twitter_id = res.twitter_id
+                 this.form.facebook_id = res.facebook_id
+                 this.form.wantedly_id = res.wantedly_id
+                 this.form.github_id = res.github_id
+                //  this.form.tags = res.
+           
              }) 
              
         },
@@ -178,38 +188,49 @@ export default {
                 })
                 
                 // console.log(this.filteredTags)
+                
                 // this.FetchCategories()
             },
-        async UpdateUser() {
+            async UpdateUser() {
             console.log("UpdateUser")
-            await this.$axios.$get('/api/v1/auto_login',{ 
-                headers: {
+            // await this.$axios.$get('/api/v1/auto_login',{ 
+            //     headers: {
+            //         "Authorization" :`Bearer ${localStorage.idToken}`,
+            //         "Content-Type": "application/json"
+            //     } 
+            //  })
+            //  .then(res => {
+                this.$axios.$put(`/api/v1/my_pages/update/${res.id}`,{ 
+                    headers: {
                     "Authorization" :`Bearer ${localStorage.idToken}`,
                     "Content-Type": "application/json"
-                } 
-             })
-             .then(res => {
-                 this.$axios.$put(`/api/v1/my_pages/update/${res.id}`,{ 
-                     user : {
-                // id : res.id,
-                username : this.form.username,
-                gender : this.form.gender,
-                age : this.form.age,
-                description : this.form.description,
-                twitter_id : this.form.twitter_id,
-                facebook_id : this.form.facebook_id,
-                wantedly_id : this.form.wantedly_id,
-                github_id : this.form.github_id,
-                }
-                
-             })
-             }) 
-             .then(response => {
-                 console.log(this.form)
-                 console.log(response)
-             })
+                } ,
+                    user : {
+                        username : this.form.username,
+                        gender : this.form.gender,
+                        age : this.form.age,
+                        description : this.form.description,
+                        twitter_id : this.form.twitter_id,
+                        facebook_id : this.form.facebook_id,
+                        wantedly_id : this.form.wantedly_id,
+                        github_id : this.form.github_id,
+                    }
+                })
+                this.$buefy.toast.open({
+                    duration: 5000,
+                    message: '編集が完了しました',
+                    type: 'is-success'
+                })
+                this.$router.push('/users/mypage')
+
+
+            //  }) 
+            //  .then(response => {
+            //      console.log(this.form)
+            //      console.log(response)
+            //  })
         },
-            hey () {
+         hey () {
                 console.log("hey")
                 this.filteredTags = this.data
             },
@@ -223,10 +244,9 @@ export default {
              formatDate (date) {
                  console.log(date)
              }
-             
 
-    }
-    
+   }
+
 }
 
 </script>

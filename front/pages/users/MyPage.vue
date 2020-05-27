@@ -1,36 +1,30 @@
 <template>
 <div>
-
     <h1>My page</h1>
-    <b-tabs type="is-toggle" @input="StatusMyPage" expanded>
-        <b-tab-item label="マイページ" icon="account-box"></b-tab-item>
-        <b-tab-item label="編集" icon="account-cog-outline"></b-tab-item>
-        <b-tab-item @click="hey()" label="マイスキル" icon="video"></b-tab-item>
-    </b-tabs>
+        <MyPageTab/>
+
    {{user.email}}
-   <component :is="MyPageComponent" :email="this.email"></component>
+   <!-- <component :is="MyPageComponent" :user="this.user"></component> -->
    
 </div>
 </template>
 
 <script>
-import MyPage from '~/components/users/MyPage.vue'
-import Edit from '~/components/users/Edit.vue'
-import MySkill from '~/components/users/MySkill.vue'
+import MyPageTab from '~/components/users/MyPageTab.vue'
+// import Edit from '~/components/users/Edit.vue'
+// import MySkill from '~/components/users/MySkill.vue'
 
 
 
 export default {
     components: {
-        MyPage,
-        Edit,
-        MySkill
+        MyPageTab
+        
     },
     data() {
         return {
         user : "",
         email : "",
-        MyPageComponent : "MyPage"
         }
     },
     created() {
@@ -55,7 +49,8 @@ export default {
             if (status === 0) {
                 this.MyPageComponent = "MyPage"
             } else if (status === 1) {
-                this.MyPageComponent = "Edit"
+                // this.MyPageComponent = "Edit"
+                this.$router.push('/users/edit')
             }　else if (status === 2) {
                 this.MyPageComponent = "MySkill"
             }

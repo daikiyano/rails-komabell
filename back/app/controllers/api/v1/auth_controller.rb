@@ -39,7 +39,6 @@ module Api
             user.update!(login_token: nil, login_token_valid_until: 1.year.ago)
             render json: {email: user.email}
           else
-            # render json: { error: "トークンが無効です"}
             response_unauthorized
           end
       end
@@ -50,9 +49,6 @@ module Api
         if user
           payload = {user_id: user.id,email: user.email}
           token = encode_token(payload)
-          logger.debug("if文の中に入りましたaaaaaaaaaaaaaaaaaa")
-            # テスト
-            logger.debug(token)
             render json: {token: token ,success: "Welcome back, #{user.email}"}
       
         else

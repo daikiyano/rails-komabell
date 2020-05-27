@@ -2,6 +2,8 @@ Rails.application.routes.draw do
 
   namespace 'api' do
     namespace 'v1' do
+      put 'my_pages/update/:id' =>  "my_pages#update"
+      get 'my_pages/index'
       #Sign Up用のみ
       get "/fetch_categories", to: "skill_categories#fetch_categories"
       get "/search", to: "books#search"
