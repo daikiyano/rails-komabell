@@ -1,17 +1,16 @@
 class Api::V1::MyPagesController < ApplicationController
-  skip_before_action :require_login, only: [:update]
+  # skip_before_action :require_login, only: [:update]
   def update
-    
-    # logger.debug("hey")
-    #   logger.debug(session_user)
-    # # end
-    user = User.find(params[:id])
-    logger.debug(user.email)
-    logger.debug("hey")
-    user.update(mypage_params)
-    logger.debug(user.username)
-    render json: {test: user ,success: "Welcome back, #{user.email}"}
-  rescue ActiveRecord::RecordNotFound
+    if session_user
+      user = User.find(session_user.id)
+      logger.debug(session_user.id)
+      user.update!(mypage_params)
+      render json: {test: user ,success: "Welcome back, #{user.email}"}
+    else
+      response_unauthorized
+    end
+    rescue ActiveRecord::RecordNotFound
+    response_unprocessable_entity
   end
 
   def index

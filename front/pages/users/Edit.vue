@@ -134,7 +134,7 @@ export default {
     },
 
    methods: {
-       FetchCategories () {
+        FetchCategories () {
             this.$axios.$get('http://127.0.0.1:3000/api/v1/fetch_categories')
             .then(res => {
                 for (var i = 0;  i < res.tag.length;  i++) {
@@ -191,45 +191,46 @@ export default {
                 
                 // this.FetchCategories()
             },
-            async UpdateUser() {
-            console.log("UpdateUser")
-            // await this.$axios.$get('/api/v1/auto_login',{ 
-            //     headers: {
-            //         "Authorization" :`Bearer ${localStorage.idToken}`,
-            //         "Content-Type": "application/json"
-            //     } 
-            //  })
-            //  .then(res => {
-                this.$axios.$put(`/api/v1/my_pages/update/${res.id}`,{ 
-                    headers: {
+        async UpdateUser() {
+            this.$axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.idToken}`
+            this.$axios.$put('/api/v1/my_pages/update/',{ 
+                headers: {
                     "Authorization" :`Bearer ${localStorage.idToken}`,
                     "Content-Type": "application/json"
                 } ,
-                    user : {
-                        username : this.form.username,
-                        gender : this.form.gender,
-                        age : this.form.age,
-                        description : this.form.description,
-                        twitter_id : this.form.twitter_id,
-                        facebook_id : this.form.facebook_id,
-                        wantedly_id : this.form.wantedly_id,
-                        github_id : this.form.github_id,
-                    }
-                })
+                user : {
+                    username : this.form.username,
+                    gender : this.form.gender,
+                    age : this.form.age,
+                    description : this.form.description,
+                    twitter_id : this.form.twitter_id,
+                    facebook_id : this.form.facebook_id,
+                    wantedly_id : this.form.wantedly_id,
+                    github_id : this.form.github_id,
+                }
+            })
+            .then(response => {
                 this.$buefy.toast.open({
                     duration: 5000,
                     message: '編集が完了しました',
                     type: 'is-success'
                 })
-                this.$router.push('/users/mypage')
-
-
-            //  }) 
-            //  .then(response => {
-            //      console.log(this.form)
-            //      console.log(response)
-            //  })
-        },
+                console.log(this.form)
+                 console.log(response)
+            })
+            .catch ( error => {
+                if (error.response.status == "401" || error.response.status == "500" || error.response.status == "422") {
+                    console.log("tokenが無効です")
+                        // this.error = "Tokenが無効です"
+                    this.$buefy.toast.open({
+                        duration: 5000,
+                        message: 'サーバー内で問題が発生しました',
+                        type: 'is-danger'
+                    })
+                }
+            })
+        // }
+            },
          hey () {
                 console.log("hey")
                 this.filteredTags = this.data

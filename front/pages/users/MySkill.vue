@@ -20,13 +20,10 @@ export default {
     return {
       activeTab: 2
     }
-    
   },
-
    methods: {
 
    }
-
 }
 
 </script>
