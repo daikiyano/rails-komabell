@@ -5,7 +5,6 @@
                 :type="{ 'is-danger': errors[0], 'is-success': valid } "
                 :message="errors"
             >
-            {{value}}
                 <b-input
                     type="email"
                     placeholder="メールアドレス"

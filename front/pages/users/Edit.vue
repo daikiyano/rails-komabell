@@ -1,24 +1,17 @@
 <template>
 <div>
-
-    <h1>My Edit</h1>
+<h1>My Edit</h1>
         <MyPageTab :activeTab="activeTab" />
-     <h1>Edit</h1>
-    <section>
-         <EmailInput  v-model="form.email"/>
-         <b-field label="ユーザー名">
-            <b-input v-model="form.username"></b-input>
-        </b-field>
-         <b-field label="性別" v-model="form.gender">
-            <b-select placeholder="性別"> 
-                <option disabled value="">性別を選択してください</option>
-                <option value=1>男性</option>
-                <option value=2>女性</option>
-                <option value=3>その他</option>
-            </b-select>
-        </b-field>
-        
-        <b-field label="Select a date">
+
+      <ValidationObserver ref="observer" v-slot="{ passes }">
+          <EmailInput  v-model="form.email"/>
+          <BInputWithValidation
+            rules="required|max:25"  
+            label="ユーザー名"
+            vid="password"
+            v-model="form.username"
+            />
+            <b-field label="Select a date">
             <b-datepicker
                 @input="hello"
                 :date-parser="parseDate"
@@ -28,22 +21,49 @@
                 icon="calendar-today"
                 trap-focus>
             </b-datepicker>
-        </b-field>
-        <b-field label="自己紹介">
-            <b-input maxlength="200" type="textarea" v-model="form.description"></b-input>
-        </b-field>
-        <b-field label="Twitterアカウント">
-            <b-input v-model="form.twitter_id"></b-input>
-        </b-field>
-        <b-field label="Facebookアカウント">
-            <b-input v-model="form.facebook_id"></b-input>
-        </b-field>
-        <b-field label="Wantedlyアカウント">
-            <b-input v-model="form.wantedly_id"></b-input>
-        </b-field>
-        <b-field label="GiHubアカウント">
-            <b-input v-model="form.github_id"></b-input>
-        </b-field>
+            </b-field>
+            <BSelectWithValidation label="性別" v-model="form.gender">
+                <option value>None</option>
+                <option value="1">男性</option>
+                <option value="2">女性</option>
+                <option value="2">その他</option>
+            </BSelectWithValidation>
+            <BInputWithValidation
+            rules="max:200" 
+            label="自己紹介"
+            type="textarea"
+            vid="description"
+            v-model="form.description"
+            />
+          <BInputWithValidation
+            rules="max:25"  
+            label="Twitterアカウント"
+            vid="password"
+            v-model="form.twitter_id"
+            />
+            <BInputWithValidation
+            label="Facebookアカウント"
+            rules="max:25" 
+            vid="facebook"
+            v-model="form.facebook_id"
+            />
+          <BInputWithValidation
+            label="Wantedlyアカウント"
+            rules="max:25"  
+            vid="wantedly"
+            v-model="form.wantedly_id"
+            />
+        
+          <BInputWithValidation
+            label="GiHubアカウント"
+            rules="max:25" 
+            vid="github"
+            v-model="form.github_id"
+            />
+       
+         </ValidationObserver>
+
+       
     </section>
 
     <section>
@@ -86,6 +106,9 @@
 import MyPageTab from '~/components/users/MyPageTab.vue'
 import EmailInput from '~/components/Form/EmailInput.vue'
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
+import BInputWithValidation from "~/components/Form/BinputWithValidation.vue";
+import BSelectWithValidation from "~/components/Form/BSelectWithValidation.vue";
+
 
 
 
@@ -94,7 +117,9 @@ export default {
         MyPageTab,
         EmailInput,
         ValidationObserver,
-        ValidationProvider 
+        ValidationProvider ,
+        BInputWithValidation,
+        BSelectWithValidation
     },
     data() {
     return {
@@ -131,6 +156,7 @@ export default {
     created() {
        this.fetchUser()
        this.FetchCategories()
+       
     },
 
    methods: {

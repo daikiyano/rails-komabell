@@ -10,13 +10,17 @@ import * as originalRules from 'vee-validate/dist/rules';
 import { required, email, max } from 'vee-validate/dist/rules'
 
 // extend('email', email)
-extend('max', max)
+extend('max', {
+  ...max,
+  message: '文字数が超過しているようです。ご確認の上、文字数制限内に収めてみてください。'
+})
 extend('required', required)
 
 extend('email',{
   ...email,
   message: 'メールアドレスは有効ではありません'
 })
+
 
 let rule;
 for (rule in originalRules) {

@@ -5,7 +5,7 @@ class Api::V1::MyPagesController < ApplicationController
       user = User.find(session_user.id)
       logger.debug(session_user.id)
       user.update!(mypage_params)
-      render json: {test: user ,success: "Welcome back, #{user.email}"}
+      response_success(:user, :update)
     else
       response_unauthorized
     end
