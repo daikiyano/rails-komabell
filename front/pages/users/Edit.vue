@@ -2,12 +2,13 @@
 <div>
 <h1>My Edit</h1>
         <MyPageTab :activeTab="activeTab" />
-
+    <section>
       <ValidationObserver ref="observer" v-slot="{ passes }">
-          <EmailInput  v-model="form.email"/>
+          <EmailInput  v-model="form.email" disabled/>
           <BInputWithValidation
-            rules="required|max:25"  
-            label="ユーザー名"
+            rules="required|max:25" 
+            icon="account"
+            placeholder="ユーザー名" 
             vid="password"
             v-model="form.username"
             />
@@ -23,7 +24,7 @@
             </b-datepicker>
             </b-field>
             <BSelectWithValidation label="性別" v-model="form.gender">
-                <option value>None</option>
+                <option value>性別を選択してください</option>
                 <option value="1">男性</option>
                 <option value="2">女性</option>
                 <option value="2">その他</option>
@@ -35,50 +36,70 @@
             vid="description"
             v-model="form.description"
             />
+            <b-icon
+                pack="fas"
+                icon="tachometer-alt">
+            </b-icon>
           <BInputWithValidation
             rules="max:25"  
-            label="Twitterアカウント"
+            icon="twitter"
+            placeholder="Twitter id"
             vid="password"
             v-model="form.twitter_id"
             />
             <BInputWithValidation
-            label="Facebookアカウント"
+            icon="facebook"
+            placeholder="Facebook id"
             rules="max:25" 
             vid="facebook"
             v-model="form.facebook_id"
             />
+              
           <BInputWithValidation
-            label="Wantedlyアカウント"
+            placeholder="wantedly id"
             rules="max:25"  
             vid="wantedly"
             v-model="form.wantedly_id"
             />
         
           <BInputWithValidation
-            label="GiHubアカウント"
+            placeholder="GitHub id"
+            icon="github"
             rules="max:25" 
             vid="github"
             v-model="form.github_id"
             />
-       
          </ValidationObserver>
+         <b-field class="file">
+        <b-upload v-model="form.file" expanded>
+            <a class="button is-primary">
+                <b-icon icon="upload"></b-icon>
+                <span>Click to upload</span>
+            </a>
+        </b-upload>
+        
+    </b-field>
+    <span class="file-name" v-if="form.file">
+            {{ form.file.name }}
+            {{ form.file }}
+        </span>
+
 
        
     </section>
 
     <section>
-    
-        <b-field label="Enter some tags">
+        <b-field>
              <!-- :data="filteredTags" -->
             <b-taginput
                 v-model="form.tags"
                :data="filteredTags"
                 autocomplete
+                placeholder="保有している技術を追加してください"
                 :open-on-focus="openOnFocus"
                 field="filteredTags"
                 icon="label"
                 @input="hey"
-                placeholder="Add a tag"
                 @typing="getFilteredTags">
             </b-taginput>
         </b-field>
@@ -86,23 +107,21 @@
     </section>
     <button class="button" type="is-dark" @click="UpdateUser">更新</button>
     <!-- {{filteredTags}} -->
-    <br>
-    email  *String Not NULL,UNIQUE,MAX=25*
-*  username, *String,Not null,UNIQUE,MAX=25*
-* gender *TinyInt*
-* age*TinyInt*
-* description *text*
-* twitter_id *String,MAX=40*
-* facebook_id*String,MAX=40*
-* wantedly_id*String,MAX=40*
-* github_id*String,MAX=40*
-* *image* *String,MAX=120*
-* login_token*String,MAX=120*
-* login_token_valid_until*String,MAX=120*
-   
 </div>
 </template>
 <script>
+//  email  *String Not NULL,UNIQUE,MAX=25*
+// *  username, *String,Not null,UNIQUE,MAX=25*
+// * gender *TinyInt*
+// * age*TinyInt*
+// * description *text*
+// * twitter_id *String,MAX=40*
+// * facebook_id*String,MAX=40*
+// * wantedly_id*String,MAX=40*
+// * github_id*String,MAX=40*
+// * *image* *String,MAX=120*
+// * login_token*String,MAX=120*
+// * login_token_valid_until*String,MAX=120*
 import MyPageTab from '~/components/users/MyPageTab.vue'
 import EmailInput from '~/components/Form/EmailInput.vue'
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
@@ -135,6 +154,7 @@ export default {
             facebook_id : "",
             wantedly_id : "",
             github_id : "",
+            file : [],
             tags: [],
         },
         filteredTags : [],
@@ -143,6 +163,7 @@ export default {
         openOnFocus: false,
         showWeekNumber: false,
         activeTab: 1,
+        count : 0
     }
     
   },
@@ -151,7 +172,17 @@ export default {
             if (val.length === 0){
                 this.filteredTags = this.data
             }
-        }
+        },
+         
+        form: {
+        handler: function (val, oldVal) {
+            this.count += 1
+            if (this.count > 0) {
+
+            }
+        },
+        deep: true
+      }
     },
     created() {
        this.fetchUser()
@@ -159,9 +190,9 @@ export default {
        
     },
 
-   methods: {
+    methods: {
         FetchCategories () {
-            this.$axios.$get('http://127.0.0.1:3000/api/v1/fetch_categories')
+            this.$axios.$get('/api/v1/fetch_categories')
             .then(res => {
                 for (var i = 0;  i < res.tag.length;  i++) {
                     this.filteredTags.push(res.tag[i]["tag_name"]);
@@ -170,59 +201,52 @@ export default {
             })
             .catch ( error => {
                 if (error.response.status == "401") {
-                     console.log("tokenが無効です")
-                     // this.error = "Tokenが無効です"
+                    console.log("tokenが無効です")
                     this.$buefy.toast.open({
-                    duration: 5000,
-                    message: 'サーバー内でも問題が発生しました',
-                    type: 'is-danger'
-                })
-            }
-        })
-    },
-    async fetchUser () {
-            const ret = await this.$axios.$get('/api/v1/auto_login',{ 
-                headers:{"Authorization" :`Bearer ${localStorage.idToken}`
+                        duration: 5000,
+                        message: 'サーバー内でも問題が発生しました',
+                        type: 'is-danger'
+                    })
                 }
-             })
-             .then(res => {
-                 console.log(res)
-                 this.form.username = res.username
-                 this.form.email = res.email
-                 this.form.age = res.age
-                 this.form.birth = res.birth
-                 this.form.description = res.description
-                 this.form.twitter_id = res.twitter_id
-                 this.form.facebook_id = res.facebook_id
-                 this.form.wantedly_id = res.wantedly_id
-                 this.form.github_id = res.github_id
-                //  this.form.tags = res.
-           
-             }) 
-             
+            })
         },
-
-         getFilteredTags(text) {
-                this.filteredTags = this.filteredTags.filter((option) => {
-                    // console.log(option)
-                    return option
-                        .toString()
-                        .toLowerCase()
-                        .indexOf(text.toLowerCase()) >= 0
-                     
-                
-                })
-                
-                // console.log(this.filteredTags)
-                
-                // this.FetchCategories()
-            },
+        async fetchUser () {
+            await this.$axios.$get('/api/v1/auto_login',{ 
+                headers:{
+                    "Authorization" :`Bearer ${localStorage.idToken}`
+                }
+            })
+            .then(res => {
+                console.log(res)
+                this.form.username = res.username
+                this.form.email = res.email
+                this.form.age = res.age
+                this.form.birth = res.birth
+                this.form.description = res.description
+                this.form.twitter_id = res.twitter_id
+                this.form.facebook_id = res.facebook_id
+                this.form.wantedly_id = res.wantedly_id
+                this.form.github_id = res.github_id
+            }) 
+        },
+        getFilteredTags(text) {
+            this.filteredTags = this.filteredTags.filter((option) => {
+                return option
+                .toString()
+                .toLowerCase()
+                .indexOf(text.toLowerCase()) >= 0
+            })
+        },
         async UpdateUser() {
             this.$axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.idToken}`
-            this.$axios.$put('/api/v1/my_pages/update/',{ 
+            var formData = new FormData();
+            var image = this.form.file;
+            formData.append("image", image);
+            this.$axios.$put('/api/v1/my_pages/update/',formData,{ 
                 headers: {
                     "Authorization" :`Bearer ${localStorage.idToken}`,
-                    "Content-Type": "application/json"
+                    // "Content-Type": "application/json",
+                    'Content-Type': 'multipart/form-data'
                 } ,
                 user : {
                     username : this.form.username,
@@ -235,13 +259,24 @@ export default {
                     github_id : this.form.github_id,
                 }
             })
+        //      if(this.form.files.field_teacher_pic_0){
+        //   var formData = new FormData();
+        //   var picture = this.form.files.field_teacher_pic_0;
+        //     formData.append("picture", picture);
+        //     formData.append("username", this.$auth.user.username);
+        //     this.$axios.$patch('/api/v1/user/',formData,{
+        //     headers: {
+        //       'Content-Type': 'multipart/form-data'
+        //     }
+        //  })
+        // }
             .then(response => {
                 this.$buefy.toast.open({
                     duration: 5000,
                     message: '編集が完了しました',
                     type: 'is-success'
                 })
-                console.log(this.form)
+                this.$router.push('/users/mypage')
                  console.log(response)
             })
             .catch ( error => {

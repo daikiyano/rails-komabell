@@ -1,12 +1,15 @@
 <template>
     <div>
         <ValidationProvider vid="email" rules="required|email" :name="$attrs.name || $attrs.label" v-slot="{ errors, valid }">
-            <b-field label="メールアドレス"
+            <b-field 
+                v-bind="$attrs"
                 :type="{ 'is-danger': errors[0], 'is-success': valid } "
                 :message="errors"
             >
                 <b-input
+                    v-bind="$attrs"
                     type="email"
+                    icon="email"
                     placeholder="メールアドレス"
                     maxlength="30"
                     @input="innerValue"

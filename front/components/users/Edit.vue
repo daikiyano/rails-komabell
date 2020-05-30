@@ -29,8 +29,14 @@
         <b-field label="自己紹介"  v-model="form.description">
             <b-input maxlength="200" type="textarea"></b-input>
         </b-field>
+        <i class="fab fa-twitter"></i>
+
+  <b-icon
+                pack="fas"
+                icon="tachometer-alt">
+            </b-icon>
         <b-field label="Twitterアカウント">
-            <b-input v-model="form.twitter_id"></b-input>
+            <b-input v-model="form.twitter_id" icon="twitter"></b-input>
         </b-field>
         <b-field label="Facebookアカウント">
             <b-input v-model="form.facebook_id"></b-input>
@@ -42,7 +48,7 @@
             <b-input v-model="form.github_id"></b-input>
         </b-field>
     </section>
-
+fa-twitter-square
     <section>
     
         <b-field label="Enter some tags">

@@ -6,6 +6,7 @@
     v-slot="{ errors, valid }"
   >
     <b-field
+    
       v-bind="$attrs"
       :type="{ 'is-danger': errors[0], 'is-success': valid && value.length !== 0 }"
       :message="errors"
