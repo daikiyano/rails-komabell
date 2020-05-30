@@ -1,36 +1,63 @@
 <template>
 <div>
+    <MyPageTab/>
+           <h1>基本情報</h1>
 
-    <h1>My page</h1>
-    <b-tabs type="is-toggle" @input="StatusMyPage" expanded>
-        <b-tab-item label="マイページ" icon="account-box"></b-tab-item>
-        <b-tab-item label="編集" icon="account-cog-outline"></b-tab-item>
-        <b-tab-item @click="hey()" label="マイスキル" icon="video"></b-tab-item>
-    </b-tabs>
-   {{user.email}}
-   <component :is="MyPageComponent" :email="this.email"></component>
+   <div class="box">
+  <article class="media">
+    <div class="media-left">
+      <figure class="image is-64x64">
+        <img src="https://bulma.io/images/placeholders/128x128.png" alt="Image">
+      </figure>
+    </div>
+    <div class="media-content">
+      <div class="content">
+        <p>
+          <strong>ユーザー名:{{user.username}}</strong>  <small>性別:31m</small>
+          <br>
+          {{user.description}}
+        </p>
+      </div>
+      <nav class="level is-mobile">
+        <div class="level-left">
+          <a class="level-item" aria-label="reply">
+            <span class="icon is-small">
+              <i class="fas fa-reply" aria-hidden="true"></i>
+            </span>
+          </a>
+          <a class="level-item" aria-label="retweet">
+            <span class="icon is-small">
+              <i class="fas fa-retweet" aria-hidden="true"></i>
+            </span>
+          </a>
+          <a class="level-item" aria-label="like">
+            <span class="icon is-small">
+              <i class="fas fa-heart" aria-hidden="true"></i>
+            </span>
+          </a>
+        </div>
+      </nav>
+    </div>
+  </article>
+</div>
    
 </div>
 </template>
 
 <script>
-import MyPage from '~/components/users/MyPage.vue'
-import Edit from '~/components/users/Edit.vue'
-import MySkill from '~/components/users/MySkill.vue'
+import MyPageTab from '~/components/users/MyPageTab.vue'
 
 
 
 export default {
     components: {
-        MyPage,
-        Edit,
-        MySkill
+        MyPageTab
+        
     },
     data() {
         return {
         user : "",
         email : "",
-        MyPageComponent : "MyPage"
         }
     },
     created() {
@@ -55,7 +82,8 @@ export default {
             if (status === 0) {
                 this.MyPageComponent = "MyPage"
             } else if (status === 1) {
-                this.MyPageComponent = "Edit"
+                // this.MyPageComponent = "Edit"
+                this.$router.push('/users/edit')
             }　else if (status === 2) {
                 this.MyPageComponent = "MySkill"
             }

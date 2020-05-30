@@ -23,6 +23,8 @@ class ApplicationController < ActionController::API
     end
 
     def auth_header
+      logger.debug(request.headers['Authorization'])
+        logger.debug("session")
         request.headers['Authorization']
     end 
 
