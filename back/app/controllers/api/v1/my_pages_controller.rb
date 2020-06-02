@@ -4,6 +4,8 @@ class Api::V1::MyPagesController < ApplicationController
     if session_user
       user = User.find(session_user.id)
       logger.debug(session_user.id)
+      logger.debug("hey")
+      logger.debug(mypage_params)
       user.update!(mypage_params)
       response_success(:user, :update)
     else
@@ -21,5 +23,6 @@ class Api::V1::MyPagesController < ApplicationController
 
   def mypage_params
     params.require(:user).permit(:email,:username,:gender,:age,:description,:image,:twitter_id,:facebook_id,:wantedly_id,:github_id)
+
   end
 end

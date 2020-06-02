@@ -216,17 +216,17 @@ export default {
                     "Authorization" :`Bearer ${localStorage.idToken}`
                 }
             })
-            .then(res => {
-                console.log(res)
-                this.form.username = res.username
-                this.form.email = res.email
-                this.form.age = res.age
-                this.form.birth = res.birth
-                this.form.description = res.description
-                this.form.twitter_id = res.twitter_id
-                this.form.facebook_id = res.facebook_id
-                this.form.wantedly_id = res.wantedly_id
-                this.form.github_id = res.github_id
+            .then(response => {
+                console.log(response)
+                this.form.username = response.user.username
+                this.form.email = response.user.email
+                this.form.age = response.user.age
+                this.form.birth = response.user.birth
+                this.form.description = response.user.description
+                this.form.twitter_id = response.user.twitter_id
+                this.form.facebook_id = response.user.facebook_id
+                this.form.wantedly_id = response.user.wantedly_id
+                this.form.github_id = response.user.github_id
             }) 
         },
         getFilteredTags(text) {
@@ -240,14 +240,16 @@ export default {
         async UpdateUser() {
             this.$axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.idToken}`
             var formData = new FormData();
-            var image = this.form.file;
-            formData.append("image", image);
+            formData.append('user[image]', this.form.file );
+
+            if(this.form.file) {
             this.$axios.$put('/api/v1/my_pages/update/',formData,{ 
                 headers: {
-                    "Authorization" :`Bearer ${localStorage.idToken}`,
-                    // "Content-Type": "application/json",
                     'Content-Type': 'multipart/form-data'
-                } ,
+                } 
+            })
+            }
+            this.$axios.$put('/api/v1/my_pages/update/',{ 
                 user : {
                     username : this.form.username,
                     gender : this.form.gender,
@@ -259,17 +261,6 @@ export default {
                     github_id : this.form.github_id,
                 }
             })
-        //      if(this.form.files.field_teacher_pic_0){
-        //   var formData = new FormData();
-        //   var picture = this.form.files.field_teacher_pic_0;
-        //     formData.append("picture", picture);
-        //     formData.append("username", this.$auth.user.username);
-        //     this.$axios.$patch('/api/v1/user/',formData,{
-        //     headers: {
-        //       'Content-Type': 'multipart/form-data'
-        //     }
-        //  })
-        // }
             .then(response => {
                 this.$buefy.toast.open({
                     duration: 5000,

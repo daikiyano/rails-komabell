@@ -60,7 +60,8 @@ module Api
   
       def auto_login
         if session_user 
-          render json: session_user
+          image = session_user.image.service_url.split("?").first
+          render json: {user: session_user,image: image}
         else
           render json: {errors: "No user Logged In"}
         end
