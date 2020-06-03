@@ -70,15 +70,36 @@
             v-model="form.github_id"
             />
          </ValidationObserver>
-         <b-field class="file">
-        <b-upload v-model="form.file" expanded>
+         <!-- <b-field class="file"> -->
+        <!-- <b-upload v-model="form.file" expanded @input="croppie">
             <a class="button is-primary">
                 <b-icon icon="upload"></b-icon>
                 <span>Click to upload</span>
             </a>
-        </b-upload>
+        </b-upload> -->
+        <input
+      accept="image/png, image/jpeg"
+      type="file"
+      name="file"
+      @change="croppie"
+    />
         
-    </b-field>
+  <!-- <button @click="crop">Crop</button> -->
+        
+    <!-- </b-field> -->
+    <vue-croppie ref="croppieRef" 
+    :enableExif="false"
+    :enableResize="false"
+    :enableOrientation="true"
+    :showZoomer="true"
+        :boundary="{ width: 450, height: 300}" 
+        :viewport="{ width:250, height:250, 'type':'circle' }"
+        >
+  </vue-croppie>
+  <!-- the result -->
+  <img :src="cropped">
+  <button @click="crop">Crop</button>
+
     <span class="file-name" v-if="form.file">
             {{ form.file.name }}
             {{ form.file }}
@@ -110,18 +131,7 @@
 </div>
 </template>
 <script>
-//  email  *String Not NULL,UNIQUE,MAX=25*
-// *  username, *String,Not null,UNIQUE,MAX=25*
-// * gender *TinyInt*
-// * age*TinyInt*
-// * description *text*
-// * twitter_id *String,MAX=40*
-// * facebook_id*String,MAX=40*
-// * wantedly_id*String,MAX=40*
-// * github_id*String,MAX=40*
-// * *image* *String,MAX=120*
-// * login_token*String,MAX=120*
-// * login_token_valid_until*String,MAX=120*
+
 import MyPageTab from '~/components/users/MyPageTab.vue'
 import EmailInput from '~/components/Form/EmailInput.vue'
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
@@ -142,6 +152,9 @@ export default {
     },
     data() {
     return {
+        croppieImage: '',
+        file : "",
+        cropped: null,    
         user : "",
         form : {
             email : "",
@@ -154,7 +167,7 @@ export default {
             facebook_id : "",
             wantedly_id : "",
             github_id : "",
-            file : [],
+            file : null,
             tags: [],
         },
         filteredTags : [],
@@ -191,6 +204,33 @@ export default {
     },
 
     methods: {
+        croppie (e) {
+           var files = e.target.files || e.dataTransfer.files;
+      if (!files.length) return;
+
+      var reader = new FileReader();
+      reader.onload = e => {
+        this.$refs.croppieRef.bind({
+          url: e.target.result
+        });
+      };
+
+    reader.readAsDataURL(files[0]);
+    // reader.readAsDataURL(files[0]);
+    },
+crop() {
+      // Options can be updated.
+      // Current option will return a base64 version of the uploaded image with a size of 600px X 450px.
+      let options = {
+        type: 'base64',
+        size: { width: 600, height: 450 },
+        format: 'jpeg'
+      };
+      this.$refs.croppieRef.result(options, output => {
+        this.cropped = this.croppieImage = output;
+          console.log(this.croppieImage);
+        });
+      },
         FetchCategories () {
             this.$axios.$get('/api/v1/fetch_categories')
             .then(res => {

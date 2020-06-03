@@ -2,10 +2,7 @@ class Api::V1::MyPagesController < ApplicationController
   # skip_before_action :require_login, only: [:update]
   def update
     if session_user
-      user = User.find(session_user.id)
-      logger.debug(session_user.id)
-      logger.debug("hey")
-      logger.debug(mypage_params)
+      user = User.find(session_user.id)      
       user.update!(mypage_params)
       response_success(:user, :update)
     else

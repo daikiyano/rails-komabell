@@ -16,6 +16,7 @@
     "nuxt": "^2.0.0",
     "nuxt-buefy": "^0.3.2",
     "vee-validate": "^3.3.0",
+    "vue-croppie": "^2.0.1",
     "vuelidate": "^0.7.5"
   },
   "devDependencies": {}

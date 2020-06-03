@@ -29,6 +29,8 @@ export default {
   */
   plugins: [
     'plugins/axios',
+    { src: '@/plugins/vue-croppie', mode: 'client'  },
+
     { src: '@/plugins/vee-validate' }
   ],
 

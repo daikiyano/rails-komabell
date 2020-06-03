@@ -74,7 +74,7 @@ export default {
              })
              .then(response => {
                  console.log(response)
-                 this.user = response.session_user
+                 this.user = response.user
                  this.image = response.image
              }) 
              
