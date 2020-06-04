@@ -70,21 +70,31 @@
             v-model="form.github_id"
             />
          </ValidationObserver>
-         <b-field class="file">
-        <b-upload v-model="form.file" expanded>
+         <!-- <b-field class="file"> -->
+        <!-- <b-upload v-model="form.file" expanded @input="croppie">
             <a class="button is-primary">
                 <b-icon icon="upload"></b-icon>
                 <span>Click to upload</span>
             </a>
-        </b-upload>
+        </b-upload> -->
         
-    </b-field>
+        
+    <b-button class="button" type="is-dark" @click="OpenModal">アップロード</b-button>
+    <!-- </b-field> -->
+    <Modal :isModalForm="this.isModalForm" 
+        :FormComponent="this.FormComponent"   
+        @isCloseModal="closeModal" 
+        @ChangeImage="ChangeImage($event)" 
+    />
+  
+  <!-- the result -->
+
     <span class="file-name" v-if="form.file">
             {{ form.file.name }}
             {{ form.file }}
         </span>
 
-
+{{form.file}}
        
     </section>
 
@@ -110,29 +120,22 @@
 </div>
 </template>
 <script>
-//  email  *String Not NULL,UNIQUE,MAX=25*
-// *  username, *String,Not null,UNIQUE,MAX=25*
-// * gender *TinyInt*
-// * age*TinyInt*
-// * description *text*
-// * twitter_id *String,MAX=40*
-// * facebook_id*String,MAX=40*
-// * wantedly_id*String,MAX=40*
-// * github_id*String,MAX=40*
-// * *image* *String,MAX=120*
-// * login_token*String,MAX=120*
-// * login_token_valid_until*String,MAX=120*
+
 import MyPageTab from '~/components/users/MyPageTab.vue'
 import EmailInput from '~/components/Form/EmailInput.vue'
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import BInputWithValidation from "~/components/Form/BinputWithValidation.vue";
 import BSelectWithValidation from "~/components/Form/BSelectWithValidation.vue";
+import ImageUploadWithValidation from '~/components/Form/ImageUploadWithValidation.vue'
+import Modal from '~/components/Modal.vue'
 
 
 
 
 export default {
     components: {
+        Modal,
+        ImageUploadWithValidation,
         MyPageTab,
         EmailInput,
         ValidationObserver,
@@ -142,7 +145,12 @@ export default {
     },
     data() {
     return {
+        croppieImage: '',
+        file : "",
+        cropped: null,    
         user : "",
+        isModalForm : false,
+        FormComponent : "",
         form : {
             email : "",
             username : "",
@@ -154,7 +162,7 @@ export default {
             facebook_id : "",
             wantedly_id : "",
             github_id : "",
-            file : [],
+            file : null,
             tags: [],
         },
         filteredTags : [],
@@ -191,6 +199,19 @@ export default {
     },
 
     methods: {
+        OpenModal () {
+            this.isModalForm = true
+            this.FormComponent = "ImageUploadWithValidation"
+        },
+        closeModal () {
+            this.isModalForm = false
+        },
+        ChangeImage(image) {
+            console.log("hey")
+            
+            this.form.file = image
+            console.log(this.form)
+        },
         FetchCategories () {
             this.$axios.$get('/api/v1/fetch_categories')
             .then(res => {
@@ -216,17 +237,17 @@ export default {
                     "Authorization" :`Bearer ${localStorage.idToken}`
                 }
             })
-            .then(res => {
-                console.log(res)
-                this.form.username = res.username
-                this.form.email = res.email
-                this.form.age = res.age
-                this.form.birth = res.birth
-                this.form.description = res.description
-                this.form.twitter_id = res.twitter_id
-                this.form.facebook_id = res.facebook_id
-                this.form.wantedly_id = res.wantedly_id
-                this.form.github_id = res.github_id
+            .then(response => {
+                console.log(response)
+                this.form.username = response.user.username
+                this.form.email = response.user.email
+                this.form.age = response.user.age
+                this.form.birth = response.user.birth
+                this.form.description = response.user.description
+                this.form.twitter_id = response.user.twitter_id
+                this.form.facebook_id = response.user.facebook_id
+                this.form.wantedly_id = response.user.wantedly_id
+                this.form.github_id = response.user.github_id
             }) 
         },
         getFilteredTags(text) {
@@ -240,14 +261,16 @@ export default {
         async UpdateUser() {
             this.$axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.idToken}`
             var formData = new FormData();
-            var image = this.form.file;
-            formData.append("image", image);
+            formData.append('user[image]', this.form.file );
+
+            if(this.form.file) {
             this.$axios.$put('/api/v1/my_pages/update/',formData,{ 
                 headers: {
-                    "Authorization" :`Bearer ${localStorage.idToken}`,
-                    // "Content-Type": "application/json",
                     'Content-Type': 'multipart/form-data'
-                } ,
+                } 
+            })
+            }
+            this.$axios.$put('/api/v1/my_pages/update/',{ 
                 user : {
                     username : this.form.username,
                     gender : this.form.gender,
@@ -259,17 +282,6 @@ export default {
                     github_id : this.form.github_id,
                 }
             })
-        //      if(this.form.files.field_teacher_pic_0){
-        //   var formData = new FormData();
-        //   var picture = this.form.files.field_teacher_pic_0;
-        //     formData.append("picture", picture);
-        //     formData.append("username", this.$auth.user.username);
-        //     this.$axios.$patch('/api/v1/user/',formData,{
-        //     headers: {
-        //       'Content-Type': 'multipart/form-data'
-        //     }
-        //  })
-        // }
             .then(response => {
                 this.$buefy.toast.open({
                     duration: 5000,
@@ -290,25 +302,22 @@ export default {
                     })
                 }
             })
-        // }
-            },
-         hey () {
-                console.log("hey")
-                this.filteredTags = this.data
-            },
-            hello (value) {
-                console.log(value)
-                this.form.birth = value
-            },
-            parseDate (date) {
-             console.log(date)
-             },
-             formatDate (date) {
-                 console.log(date)
-             }
-
-   }
-
+        },
+        hey () {
+            console.log("hey")
+            this.filteredTags = this.data
+        },
+        hello (value) {
+            console.log(value)
+            this.form.birth = value
+        },
+        parseDate (date) {
+            console.log(date)
+        },
+        formatDate (date) {
+            console.log(date)
+        }
+    }
 }
 
 </script>

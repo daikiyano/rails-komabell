@@ -13,6 +13,7 @@
             :is="FormComponent"
             @isCloseModal="closeModal"
             @ChangeForm="$emit('ChangeForm', $event)"
+            @ChangeImage="$emit('ChangeImage', $event)"
           >
           </component>
         </div>
@@ -23,11 +24,13 @@
 <script>
   import Login from '~/components/Login.vue'
   import SignUp from '~/components/SignUp.vue'
+  import ImageUploadWithValidation from '~/components/Form/ImageUploadWithValidation.vue'
     export default {
         name: 'Modal',
         components: {
             Login,
             SignUp,
+            ImageUploadWithValidation
         },
         props: {
             'isModalForm': {

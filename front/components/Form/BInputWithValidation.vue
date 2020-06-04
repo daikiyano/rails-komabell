@@ -8,9 +8,10 @@
     <b-field
     
       v-bind="$attrs"
-      :type="{ 'is-danger': errors[0], 'is-success': valid && value.length !== 0 }"
+      :type="{ 'is-danger': errors[0], 'is-success': valid  }"
       :message="errors"
     >
+    <!-- && value.length !== 0 -->
       <b-input v-model="innerValue" v-bind="$attrs"></b-input>
     </b-field>
   </ValidationProvider>

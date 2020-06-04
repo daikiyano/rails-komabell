@@ -7,7 +7,7 @@
   <article class="media">
     <div class="media-left">
       <figure class="image is-64x64">
-        <img src="https://bulma.io/images/placeholders/128x128.png" alt="Image">
+        <img :src="image" alt="Image">
       </figure>
     </div>
     <div class="media-content">
@@ -15,6 +15,7 @@
         <p>
           <strong>ユーザー名:{{user.username}}</strong>  <small>性別:31m</small>
           <br>
+          <!-- <img :src="user" alt=""> -->
           {{user.description}}
         </p>
       </div>
@@ -57,6 +58,7 @@ export default {
     data() {
         return {
         user : "",
+        image : "",
         email : "",
         }
     },
@@ -70,10 +72,10 @@ export default {
                 headers:{"Authorization" :`Bearer ${localStorage.idToken}`
                 }
              })
-             .then(res => {
-                 console.log(res)
-                 this.user = res
-                 this.email = res.email
+             .then(response => {
+                 console.log(response)
+                 this.user = response.user
+                 this.image = response.image
              }) 
              
         },
