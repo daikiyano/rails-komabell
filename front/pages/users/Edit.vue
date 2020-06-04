@@ -77,35 +77,24 @@
                 <span>Click to upload</span>
             </a>
         </b-upload> -->
-        <input
-      accept="image/png, image/jpeg"
-      type="file"
-      name="file"
-      @change="croppie"
-    />
         
-  <!-- <button @click="crop">Crop</button> -->
         
+    <b-button class="button" type="is-dark" @click="OpenModal">アップロード</b-button>
     <!-- </b-field> -->
-    <vue-croppie ref="croppieRef" 
-    :enableExif="false"
-    :enableResize="false"
-    :enableOrientation="true"
-    :showZoomer="true"
-        :boundary="{ width: 450, height: 300}" 
-        :viewport="{ width:250, height:250, 'type':'circle' }"
-        >
-  </vue-croppie>
+    <Modal :isModalForm="this.isModalForm" 
+        :FormComponent="this.FormComponent"   
+        @isCloseModal="closeModal" 
+        @ChangeImage="ChangeImage($event)" 
+    />
+  
   <!-- the result -->
-  <img :src="cropped">
-  <button @click="crop">Crop</button>
 
     <span class="file-name" v-if="form.file">
             {{ form.file.name }}
             {{ form.file }}
         </span>
 
-
+{{form.file}}
        
     </section>
 
@@ -137,12 +126,17 @@ import EmailInput from '~/components/Form/EmailInput.vue'
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import BInputWithValidation from "~/components/Form/BinputWithValidation.vue";
 import BSelectWithValidation from "~/components/Form/BSelectWithValidation.vue";
+import ImageUploadWithValidation from '~/components/Form/ImageUploadWithValidation.vue'
+
+import Modal from '~/components/Modal.vue'
 
 
 
 
 export default {
     components: {
+        Modal,
+        ImageUploadWithValidation,
         MyPageTab,
         EmailInput,
         ValidationObserver,
@@ -156,6 +150,8 @@ export default {
         file : "",
         cropped: null,    
         user : "",
+        isModalForm : false,
+        FormComponent : "",
         form : {
             email : "",
             username : "",
@@ -204,33 +200,22 @@ export default {
     },
 
     methods: {
-        croppie (e) {
-           var files = e.target.files || e.dataTransfer.files;
-      if (!files.length) return;
+        OpenModal () {
+            this.isModalForm = true
+            this.FormComponent = "ImageUploadWithValidation"
+        },
+        ChangeImage(image) {
+            console.log("hey")
+            
+            this.form.file = image
+            console.log(this.form)
 
-      var reader = new FileReader();
-      reader.onload = e => {
-        this.$refs.croppieRef.bind({
-          url: e.target.result
-        });
-      };
 
-    reader.readAsDataURL(files[0]);
-    // reader.readAsDataURL(files[0]);
-    },
-crop() {
-      // Options can be updated.
-      // Current option will return a base64 version of the uploaded image with a size of 600px X 450px.
-      let options = {
-        type: 'base64',
-        size: { width: 600, height: 450 },
-        format: 'jpeg'
-      };
-      this.$refs.croppieRef.result(options, output => {
-        this.cropped = this.croppieImage = output;
-          console.log(this.croppieImage);
-        });
-      },
+
+
+
+
+        },
         FetchCategories () {
             this.$axios.$get('/api/v1/fetch_categories')
             .then(res => {
@@ -323,6 +308,9 @@ crop() {
             })
         // }
             },
+        closeModal () {
+            this.isModalForm = false
+        },
          hey () {
                 console.log("hey")
                 this.filteredTags = this.data
