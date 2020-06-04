@@ -5,6 +5,7 @@ class Api::V1::MyPagesController < ApplicationController
       user = User.find(session_user.id)  
       if image = params[:user][:image]
         
+        # TODO:bese64を文字化けせずにdecodeさせる　20200604
         logger.debug("##################")
         # metadata = "data:image/jpeg;base64," 
         # logger.debug(metadata)
@@ -13,11 +14,8 @@ class Api::V1::MyPagesController < ApplicationController
         # blob = Base64.decode64(base64_string) 
         image = image.split(",")[-1]
         logger.debug(image.class)
-        # image = image + "="
         decoded_data = Base64.decode64(image).force_encoding('UTF-8')
         logger.debug(decoded_data)
-        
-
       end
             
       user.update!(mypage_params)
@@ -35,14 +33,14 @@ class Api::V1::MyPagesController < ApplicationController
 
   private
 
-  def create_extension(image)
-    content_type = rex_image(image)
-    content_type[%r/\b(?!.*\/).*/]
-  end
+  # def create_extension(image)
+  #   content_type = rex_image(image)
+  #   content_type[%r/\b(?!.*\/).*/]
+  # end
 
-  def rex_image(image)
-    image[%r/(image\/[a-z]{3,4})|(application\/[a-z]{3,4})/]
-  end
+  # def rex_image(image)
+  #   image[%r/(image\/[a-z]{3,4})|(application\/[a-z]{3,4})/]
+  # end
 
   def mypage_params
     params.require(:user).permit(:email,:username,:gender,:age,:description,:image,:twitter_id,:facebook_id,:wantedly_id,:github_id)

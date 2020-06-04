@@ -127,7 +127,6 @@ import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import BInputWithValidation from "~/components/Form/BinputWithValidation.vue";
 import BSelectWithValidation from "~/components/Form/BSelectWithValidation.vue";
 import ImageUploadWithValidation from '~/components/Form/ImageUploadWithValidation.vue'
-
 import Modal from '~/components/Modal.vue'
 
 
@@ -204,17 +203,14 @@ export default {
             this.isModalForm = true
             this.FormComponent = "ImageUploadWithValidation"
         },
+        closeModal () {
+            this.isModalForm = false
+        },
         ChangeImage(image) {
             console.log("hey")
             
             this.form.file = image
             console.log(this.form)
-
-
-
-
-
-
         },
         FetchCategories () {
             this.$axios.$get('/api/v1/fetch_categories')
@@ -306,28 +302,22 @@ export default {
                     })
                 }
             })
-        // }
-            },
-        closeModal () {
-            this.isModalForm = false
         },
-         hey () {
-                console.log("hey")
-                this.filteredTags = this.data
-            },
-            hello (value) {
-                console.log(value)
-                this.form.birth = value
-            },
-            parseDate (date) {
-             console.log(date)
-             },
-             formatDate (date) {
-                 console.log(date)
-             }
-
-   }
-
+        hey () {
+            console.log("hey")
+            this.filteredTags = this.data
+        },
+        hello (value) {
+            console.log(value)
+            this.form.birth = value
+        },
+        parseDate (date) {
+            console.log(date)
+        },
+        formatDate (date) {
+            console.log(date)
+        }
+    }
 }
 
 </script>
