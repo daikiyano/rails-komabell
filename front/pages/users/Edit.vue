@@ -23,11 +23,11 @@
                 trap-focus>
             </b-datepicker>
             </b-field>
-            <BSelectWithValidation label="性別" v-model="form.gender">
-                <option value>性別を選択してください</option>
-                <option value="1">男性</option>
-                <option value="2">女性</option>
-                <option value="2">その他</option>
+            <BSelectWithValidation label="性別" v-model="form.gender" placeholder="性別を選択してください">
+                <!-- <option value=0>性別を選択してください</option> -->
+                <option value=1>男性</option>
+                <option value=2>女性</option>
+                <option value=3>その他</option>
             </BSelectWithValidation>
             <BInputWithValidation
             rules="max:200" 
@@ -70,32 +70,7 @@
             v-model="form.github_id"
             />
          </ValidationObserver>
-         <!-- <b-field class="file"> -->
-        <!-- <b-upload v-model="form.file" expanded @input="croppie">
-            <a class="button is-primary">
-                <b-icon icon="upload"></b-icon>
-                <span>Click to upload</span>
-            </a>
-        </b-upload> -->
-        
-        
-    <b-button class="button" type="is-dark" @click="OpenModal">アップロード</b-button>
-    <!-- </b-field> -->
-    <Modal :isModalForm="this.isModalForm" 
-        :FormComponent="this.FormComponent"   
-        @isCloseModal="closeModal" 
-        @ChangeImage="ChangeImage($event)" 
-    />
-  
-  <!-- the result -->
-
-    <span class="file-name" v-if="form.file">
-            {{ form.file.name }}
-            {{ form.file }}
-        </span>
-
-{{form.file}}
-       
+         
     </section>
 
     <section>
@@ -127,15 +102,12 @@ import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import BInputWithValidation from "~/components/Form/BinputWithValidation.vue";
 import BSelectWithValidation from "~/components/Form/BSelectWithValidation.vue";
 import ImageUploadWithValidation from '~/components/Form/ImageUploadWithValidation.vue'
-import Modal from '~/components/Modal.vue'
 
 
 
 
 export default {
     components: {
-        Modal,
-        ImageUploadWithValidation,
         MyPageTab,
         EmailInput,
         ValidationObserver,
@@ -144,10 +116,7 @@ export default {
         BSelectWithValidation
     },
     data() {
-    return {
-        croppieImage: '',
-        file : "",
-        cropped: null,    
+    return { 
         user : "",
         isModalForm : false,
         FormComponent : "",
@@ -162,7 +131,6 @@ export default {
             facebook_id : "",
             wantedly_id : "",
             github_id : "",
-            file : null,
             tags: [],
         },
         filteredTags : [],
@@ -199,18 +167,39 @@ export default {
     },
 
     methods: {
-        OpenModal () {
-            this.isModalForm = true
-            this.FormComponent = "ImageUploadWithValidation"
-        },
-        closeModal () {
-            this.isModalForm = false
-        },
-        ChangeImage(image) {
-            console.log("hey")
-            
-            this.form.file = image
-            console.log(this.form)
+        
+        UploadImage(image) {
+        this.$axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.idToken}`
+            var formData = new FormData();
+            formData.append('user[image]', this.form.file );
+
+            if(this.form.file) {
+            this.$axios.$put('/api/v1/mypage/user_images',formData,{ 
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                } 
+            })
+            .then(response => {
+                this.$buefy.toast.open({
+                    duration: 5000,
+                    message: '画像アップロードが完了しました',
+                    type: 'is-success'
+                })
+                this.$router.push('/users/edit')
+                 console.log(response)
+            })
+            .catch ( error => {
+                if (error.response.status == "401" || error.response.status == "500" || error.response.status == "422") {
+                    console.log("tokenが無効です")
+                        // this.error = "Tokenが無効です"
+                    this.$buefy.toast.open({
+                        duration: 5000,
+                        message: 'サーバー内で問題が発生しました',
+                        type: 'is-danger'
+                    })
+                }
+            })
+            }
         },
         FetchCategories () {
             this.$axios.$get('/api/v1/fetch_categories')
@@ -260,16 +249,6 @@ export default {
         },
         async UpdateUser() {
             this.$axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.idToken}`
-            var formData = new FormData();
-            formData.append('user[image]', this.form.file );
-
-            if(this.form.file) {
-            this.$axios.$put('/api/v1/my_pages/update/',formData,{ 
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                } 
-            })
-            }
             this.$axios.$put('/api/v1/my_pages/update/',{ 
                 user : {
                     username : this.form.username,

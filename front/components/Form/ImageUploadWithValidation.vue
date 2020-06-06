@@ -5,13 +5,13 @@
                 <header class="modal-card-head">
                     <p class="modal-card-title">画像を設定する</p>
                     <input
-                        accept="image/png, image/jpeg"
+                       accept="image/png,image/jpeg,image/gif" 
                         type="file"
                         name="file"
                         @change="croppie"
                     />
                 </header>
-        
+         <!-- accept="image/png,image/jpeg,image/gif" -->
                 <div v-if="this.step === 1">
                     <vue-croppie ref="croppieRef" 
                         :enableExif="false"
@@ -30,6 +30,7 @@
                     </figure>
                 </div>
                 <footer class="modal-card-foot">
+                    <button v-if="this.croppedImage !== null" class="button" type="button" @click="ChangeImage()">画像を更新する</button>
                     <button class="button" type="button" @click="close()">閉じる</button>
                 </footer>
             </section>
@@ -52,19 +53,31 @@ export default {
     },
     methods: {
         croppie (e) {
-            this.step = 1
             this.isModalForm = true
             this.FormComponent = "ImageUploadWithValidation"
             console.log(this.formComponent)
             var files = e.target.files || e.dataTransfer.files;
             if (!files.length) return;
+            console.log(files[0].name.split(".")[1])
+            var filetype = files[0].name.split(".")[1]
+            if (filetype === "jpg" || filetype === "jpeg" || filetype === "png" || filetype === "gif"){
+                this.step = 1
                 var reader = new FileReader();
                 reader.onload = e => {
                     this.$refs.croppieRef.bind({
                     url: e.target.result
-                });
-            };
-            reader.readAsDataURL(files[0]);
+                    });
+                };
+                reader.readAsDataURL(files[0]);
+            } else {
+                this.$buefy.toast.open({
+                duration: 5000,
+                message: '指定された拡張子（PNG/JPG/GIF）ではありません',
+                type: 'is-success'
+                })
+                return;
+            }
+             
         },
         crop() {
             this.step = 2
@@ -83,6 +96,9 @@ export default {
         },
         close () {
             this.$emit('isCloseModal', false)
+        },
+        ChangeImage () {
+            this.$emit('UploadImage')
         },
     }
 }

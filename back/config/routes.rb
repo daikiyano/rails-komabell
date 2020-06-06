@@ -2,6 +2,9 @@ Rails.application.routes.draw do
 
   namespace 'api' do
     namespace 'v1' do
+      namespace :mypage do
+        resource :user_images, only: [:update]
+      end
       put 'my_pages/update' =>  "my_pages#update"
       get 'my_pages/index'
       #Sign Up用のみ

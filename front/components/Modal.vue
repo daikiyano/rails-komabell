@@ -14,6 +14,7 @@
             @isCloseModal="closeModal"
             @ChangeForm="$emit('ChangeForm', $event)"
             @ChangeImage="$emit('ChangeImage', $event)"
+            @UploadImage="$emit('UploadImage')"
           >
           </component>
         </div>
