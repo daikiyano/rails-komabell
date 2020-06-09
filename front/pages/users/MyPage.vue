@@ -9,7 +9,7 @@
       <figure class="image is-64x64">
         <img class="is-rounded" :src="image" alt="Image">
       </figure>
-      <b-button class="button" type="is-dark" @click="OpenModal">画像アップロード</b-button>
+      <b-button class="button" type="is-dark" @click="OpenModal">アップロード</b-button>
     </div>
     <Modal :isModalForm="this.isModalForm" 
         :FormComponent="this.FormComponent"   

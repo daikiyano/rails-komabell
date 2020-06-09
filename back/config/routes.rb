@@ -5,6 +5,9 @@ Rails.application.routes.draw do
       namespace :mypage do
         resource :user_images, only: [:update]
       end
+      namespace :myskill do
+        resource :user_skill_categories, only: [:new,:create,:update]
+      end
       put 'my_pages/update' =>  "my_pages#update"
       get 'my_pages/index'
       #Sign Up用のみ
