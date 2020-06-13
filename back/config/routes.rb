@@ -6,7 +6,8 @@ Rails.application.routes.draw do
         resource :user_images, only: [:update]
       end
       namespace :myskill do
-        resource :user_skill_categories, only: [:new,:create,:update]
+        resource :user_skill_categories, only: [:index,:create,:update]
+        get 'user_skill_categories/index'
       end
       put 'my_pages/update' =>  "my_pages#update"
       get 'my_pages/index'

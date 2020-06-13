@@ -4,4 +4,5 @@ class UserSkillCategory < ApplicationRecord
   validates :user_id,presence: true
   validates :skill_category_id,presence: true
 
+
 end
