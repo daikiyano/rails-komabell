@@ -60,7 +60,11 @@ module Api
   
       def auto_login
         if session_user 
+          # ユーザー画像
           image = session_user.image.service_url.split("?").first
+          # ユーザー技術タグ
+          @user_skill_arrays = SkillCategory.joins(:user_skill_categories).where(user_skill_categories: {user_id: session_user.id}).select(:id,:tag_name,:icon_url,:skill)
+
           render json: {user: session_user,image: image}
         else
           render json: {errors: "No user Logged In"}

@@ -27,7 +27,31 @@
           {{user.description}}
         </p>
       </div>
-      <nav class="level is-mobile">
+       <section>
+         <h2><strong>保有技術</strong></h2>
+         <div v-for="(tag, index) in this.SkillTags" :key="index">
+            <b-tag style="float: left; margin: 10px 10px;">{{tag.tag_name}}</b-tag> 
+       
+        <b-field :label="tag.tag_name">
+              <b-slider type="is-success" 
+                    :min="0" :max="4" 
+                    :value="tag.skill" 
+                    :tooltip="false" 
+                    :aria-label="tag.tag_name" 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                    >
+                    
+                 <b-slider-tick :value="0">0</b-slider-tick>
+                <b-slider-tick :value="1">25</b-slider-tick>
+                <b-slider-tick :value="2">50</b-slider-tick>
+                <b-slider-tick :value="3">75</b-slider-tick>
+                <b-slider-tick :value="4">100</b-slider-tick>
+              </b-slider>
+            </b-field>
+           </div>
+    </section>
+
+      <!-- <nav class="level is-mobile">
         <div class="level-left">
           <a class="level-item" aria-label="reply">
             <span class="icon is-small">
@@ -45,7 +69,7 @@
             </span>
           </a>
         </div>
-      </nav>
+      </nav> -->
     </div>
   </article>
 </div>
@@ -71,19 +95,22 @@ export default {
         user : "",
         image : "",
         email : "",
+        SkillTags : [],
         croppieImage: '',
         file : "",
         cropped: null,    
         user : "",
         isModalForm : false,
         FormComponent : "",
-        form : {
-          file : null       
-        },
+          form : {
+            file : null       
+          },
+        
         }
     },
     created() {
        this.fetchUser()
+       this.FetchUserSkills()
     },
     
     methods: {
@@ -99,6 +126,25 @@ export default {
                  this.image = response.image
              }) 
              
+        },
+        FetchUserSkills () {
+          this.$axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.idToken}`
+            this.$axios.$get('/api/v1/myskill/user_skill_categories/index')
+            .then(res => { 
+             this.SkillTags = res.data
+            //  this.skill_tags = [[7,"iOS",1], [9,"Android",2]]
+             console.log(this.SkillTags)
+            })
+            .catch ( error => {
+                if (error.response.status == "401") {
+                    console.log("tokenが無効です")
+                    this.$buefy.toast.open({
+                        duration: 5000,
+                        message: 'サーバー内でも問題が発生しました',
+                        type: 'is-danger'
+                    })
+                }
+            })
         },
         StatusMyPage(status) {
             if (status === 0) {
