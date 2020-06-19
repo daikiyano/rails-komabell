@@ -27,14 +27,24 @@
               {{user.description}}
             </p>
           </div>
+  
         </div>
       </article>
+      
     </div>
       <div class="box">
        
       <article class="media">
         <div class="media-content">
           <div class="content">
+            <h3>Github</h3>
+            <div class="github-link">
+  <i class="fab fa-github-square"></i>
+  <a href="https://github.com/daikiyano" target="_blank">@daikiyano</a>
+</div>
+<a href="https://github.com/daikiyano" target="_blank">
+  <img style="width: 100%;" src="https://grass-graph.moshimo.works/images/daikiyano.png">
+</a>
              <h3>技術タグ</h3>
              
              <div v-for="(tag, index) in this.SkillTags" :key="index" style="display: inline; margin: 5px 5px; text-align: center;">
