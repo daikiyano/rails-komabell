@@ -30,18 +30,17 @@
 
             <b-field :label="tag.tag_name">
               <b-slider type="is-success" 
-                    :min="0" :max="4" 
+                    :min="0" :max="100" 
                     :value="tag.skill" 
                     :tooltip="false" 
                     :aria-label="tag.tag_name" 
                     @input="ChangeSkillTagsArrays(index,tag.id,tag.tag_name,$event)"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    >
-                    
-                 <b-slider-tick :value="0">0</b-slider-tick>
-                <b-slider-tick :value="1">25</b-slider-tick>
-                <b-slider-tick :value="2">50</b-slider-tick>
-                <b-slider-tick :value="3">75</b-slider-tick>
-                <b-slider-tick :value="4">100</b-slider-tick>
+                    >   
+                <b-slider-tick :value="0">0</b-slider-tick>
+                <b-slider-tick :value="25">25</b-slider-tick>
+                <b-slider-tick :value="50">50</b-slider-tick>
+                <b-slider-tick :value="75">75</b-slider-tick>
+                <b-slider-tick :value="100">100</b-slider-tick>
               </b-slider>
             </b-field>
           </div>

@@ -1,19 +1,30 @@
 module Api
     module V1 
-
         class BooksController < ApplicationController
             skip_before_action :require_login, only: [:search,:show]
-
-
             def search
-                @books = RakutenWebService::Books::Book.search(booksGenreId: "001005")
+                category = params[:book_category]
+
+                if category = params[:book_category]
+                    begin
+                        if category == "001005"
+                            @books = RakutenWebService::Books::Book.search(booksGenreId: "001005")
+                        else 
+                            @books = RakutenWebService::Books::Book.search(title: category)
+                        end
+                        render json: { status: 'success', data: @books}
+                    rescue => e
+                        logger.error e
+                        response_not_found
+                else
+                    response_bad_request
+                end
+                   
                 # @root = RakutenWebService::Ichiba::Genre.root # root genre
             #    ビジネス
                 # 101905
                 # コンピューター
                 # 101912
-                 render json: { status: 'success', data: @books}
-               
             end
 
             def show
@@ -25,6 +36,7 @@ module Api
                     response_not_found
                 end
             end
+
         end
     end
 end

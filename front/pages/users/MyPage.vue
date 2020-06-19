@@ -1,78 +1,68 @@
 <template>
 <div>
     <MyPageTab/>
-           <h1>基本情報</h1>
-
+    
    <div class="box">
-  <article class="media">
-    <div class="media-left">
-      <figure class="image is-64x64">
-        <img class="is-rounded" :src="image" alt="Image">
-      </figure>
-      <b-button class="button" type="is-dark" @click="OpenModal">アップロード</b-button>
-    </div>
-    <Modal :isModalForm="this.isModalForm" 
-        :FormComponent="this.FormComponent"   
-        @isCloseModal="closeModal" 
-        @ChangeImage="ChangeImage($event)" 
-        @UploadImage="UploadImage()" 
-    />
-  
-    <div class="media-content">
-      <div class="content">
-        <p>
-          <strong>ユーザー名:{{user.username}}</strong>  <small>性別:31m</small>
-          <br>
-          <!-- <img :src="user" alt=""> -->
-          {{user.description}}
-        </p>
-      </div>
-       <section>
-         <h2><strong>保有技術</strong></h2>
-         <div v-for="(tag, index) in this.SkillTags" :key="index">
-            <b-tag style="float: left; margin: 10px 10px;">{{tag.tag_name}}</b-tag> 
-       
-        <b-field :label="tag.tag_name">
-              <b-slider type="is-success" 
-                    :min="0" :max="4" 
-                    :value="tag.skill" 
-                    :tooltip="false" 
-                    :aria-label="tag.tag_name" 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-                    >
-                    
-                 <b-slider-tick :value="0">0</b-slider-tick>
-                <b-slider-tick :value="1">25</b-slider-tick>
-                <b-slider-tick :value="2">50</b-slider-tick>
-                <b-slider-tick :value="3">75</b-slider-tick>
-                <b-slider-tick :value="4">100</b-slider-tick>
-              </b-slider>
-            </b-field>
-           </div>
-    </section>
-
-      <!-- <nav class="level is-mobile">
-        <div class="level-left">
-          <a class="level-item" aria-label="reply">
-            <span class="icon is-small">
-              <i class="fas fa-reply" aria-hidden="true"></i>
-            </span>
-          </a>
-          <a class="level-item" aria-label="retweet">
-            <span class="icon is-small">
-              <i class="fas fa-retweet" aria-hidden="true"></i>
-            </span>
-          </a>
-          <a class="level-item" aria-label="like">
-            <span class="icon is-small">
-              <i class="fas fa-heart" aria-hidden="true"></i>
-            </span>
-          </a>
+     <h2><strong>基本情報</strong></h2>
+      <article class="media">
+        <div class="media-left">
+          <figure class="image is-64x64">
+            <img class="is-rounded" :src="image" alt="Image">
+          </figure>
+          <b-button class="button" type="is-dark" @click="OpenModal">アップロード</b-button>
         </div>
-      </nav> -->
+        <Modal :isModalForm="this.isModalForm" 
+            :FormComponent="this.FormComponent"   
+            @isCloseModal="closeModal" 
+            @ChangeImage="ChangeImage($event)" 
+            @UploadImage="UploadImage()" 
+        />
+      
+        <div class="media-content">
+          <div class="content">
+            <p>
+              <strong>ユーザー名:{{user.username}}</strong>  <small>性別:31m</small>
+              <br>
+              <!-- <img :src="user" alt=""> -->
+              {{user.description}}
+            </p>
+          </div>
+        </div>
+      </article>
     </div>
-  </article>
-</div>
+      <div class="box">
+       
+      <article class="media">
+        <div class="media-content">
+          <div class="content">
+             <h3>技術タグ</h3>
+             
+             <div v-for="(tag, index) in this.SkillTags" :key="index" style="display: inline; margin: 5px 5px; text-align: center;">
+             <b-tag style="height: 30px;">{{tag.tag_name}}</b-tag>
+            </div>
+              <h3>技術レベル</h3>
+            <div v-for="(tag, index) in this.SkillTags" :key="index">
+              <div v-if="tag.skill > 0">
+                <img style="height: 60%; display: inline-block;" :src="tag.icon_url" alt="">
+                <b-progress 
+                size="is-large" 
+                style="margin: 10px 10px;" 
+                type="is-success" 
+                show-value 
+                format="percent" 
+                :value="tag.skill"
+                >
+                <!-- <img style="height: 60%;" :src="tag.icon_url" alt=""> -->
+                  {{tag.tag_name}}
+                </b-progress>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        </article>
+      </div>
+
    
 </div>
 </template>
