@@ -22,7 +22,7 @@
   methods: {
     test () {
       const isbn = this.$route.params.id
-       this.$axios.$get(`http://127.0.0.1:3000/api/v1/books/${isbn}`)
+       this.$axios.$get(`/api/v1/books/${isbn}`)
       .then(res => {
         console.log(res)
         console.log(res.data[0].params)

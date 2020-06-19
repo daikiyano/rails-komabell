@@ -1,54 +1,68 @@
 <template>
 <div>
     <MyPageTab/>
-           <h1>基本情報</h1>
-
+    
    <div class="box">
-  <article class="media">
-    <div class="media-left">
-      <figure class="image is-64x64">
-        <img class="is-rounded" :src="image" alt="Image">
-      </figure>
-      <b-button class="button" type="is-dark" @click="OpenModal">画像アップロード</b-button>
-    </div>
-    <Modal :isModalForm="this.isModalForm" 
-        :FormComponent="this.FormComponent"   
-        @isCloseModal="closeModal" 
-        @ChangeImage="ChangeImage($event)" 
-        @UploadImage="UploadImage()" 
-    />
-  
-    <div class="media-content">
-      <div class="content">
-        <p>
-          <strong>ユーザー名:{{user.username}}</strong>  <small>性別:31m</small>
-          <br>
-          <!-- <img :src="user" alt=""> -->
-          {{user.description}}
-        </p>
-      </div>
-      <nav class="level is-mobile">
-        <div class="level-left">
-          <a class="level-item" aria-label="reply">
-            <span class="icon is-small">
-              <i class="fas fa-reply" aria-hidden="true"></i>
-            </span>
-          </a>
-          <a class="level-item" aria-label="retweet">
-            <span class="icon is-small">
-              <i class="fas fa-retweet" aria-hidden="true"></i>
-            </span>
-          </a>
-          <a class="level-item" aria-label="like">
-            <span class="icon is-small">
-              <i class="fas fa-heart" aria-hidden="true"></i>
-            </span>
-          </a>
+     <h2><strong>基本情報</strong></h2>
+      <article class="media">
+        <div class="media-left">
+          <figure class="image is-64x64">
+            <img class="is-rounded" :src="image" alt="Image">
+          </figure>
+          <b-button class="button" type="is-dark" @click="OpenModal">アップロード</b-button>
         </div>
-      </nav>
+        <Modal :isModalForm="this.isModalForm" 
+            :FormComponent="this.FormComponent"   
+            @isCloseModal="closeModal" 
+            @ChangeImage="ChangeImage($event)" 
+            @UploadImage="UploadImage()" 
+        />
+      
+        <div class="media-content">
+          <div class="content">
+            <p>
+              <strong>ユーザー名:{{user.username}}</strong>  <small>性別:31m</small>
+              <br>
+              <!-- <img :src="user" alt=""> -->
+              {{user.description}}
+            </p>
+          </div>
+        </div>
+      </article>
     </div>
-  </article>
-</div>
+      <div class="box">
+       
+      <article class="media">
+        <div class="media-content">
+          <div class="content">
+             <h3>技術タグ</h3>
+             
+             <div v-for="(tag, index) in this.SkillTags" :key="index" style="display: inline; margin: 5px 5px; text-align: center;">
+             <b-tag style="height: 30px;">{{tag.tag_name}}</b-tag>
+            </div>
+              <h3>技術レベル</h3>
+            <div v-for="(tag, index) in this.SkillTags" :key="index">
+              <div v-if="tag.skill > 0">
+                <img style="height: 60%; display: inline-block;" :src="tag.icon_url" alt="">
+                <b-progress 
+                size="is-large" 
+                style="margin: 10px 10px;" 
+                type="is-success" 
+                show-value 
+                format="percent" 
+                :value="tag.skill"
+                >
+                <!-- <img style="height: 60%;" :src="tag.icon_url" alt=""> -->
+                  {{tag.tag_name}}
+                </b-progress>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        </article>
+      </div>
+
    
 </div>
 </template>
@@ -71,19 +85,22 @@ export default {
         user : "",
         image : "",
         email : "",
+        SkillTags : [],
         croppieImage: '',
         file : "",
         cropped: null,    
         user : "",
         isModalForm : false,
         FormComponent : "",
-        form : {
-          file : null       
-        },
+          form : {
+            file : null       
+          },
+        
         }
     },
     created() {
        this.fetchUser()
+       this.FetchUserSkills()
     },
     
     methods: {
@@ -99,6 +116,25 @@ export default {
                  this.image = response.image
              }) 
              
+        },
+        FetchUserSkills () {
+          this.$axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.idToken}`
+            this.$axios.$get('/api/v1/myskill/user_skill_categories/index')
+            .then(res => { 
+             this.SkillTags = res.data
+            //  this.skill_tags = [[7,"iOS",1], [9,"Android",2]]
+             console.log(this.SkillTags)
+            })
+            .catch ( error => {
+                if (error.response.status == "401") {
+                    console.log("tokenが無効です")
+                    this.$buefy.toast.open({
+                        duration: 5000,
+                        message: 'サーバー内でも問題が発生しました',
+                        type: 'is-danger'
+                    })
+                }
+            })
         },
         StatusMyPage(status) {
             if (status === 0) {

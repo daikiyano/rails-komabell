@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+    has_many :skill_categories, through: :user_skill_categories
+    has_many :user_skill_categories,dependent: :destroy
     has_one_attached :image
     validates :email, uniqueness: true
     validates :username, length: { maximum: 25 } 

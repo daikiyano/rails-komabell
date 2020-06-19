@@ -71,25 +71,7 @@
             />
          </ValidationObserver>
          
-    </section>
-
-    <section>
-        <b-field>
-             <!-- :data="filteredTags" -->
-            <b-taginput
-                v-model="form.tags"
-               :data="filteredTags"
-                autocomplete
-                placeholder="保有している技術を追加してください"
-                :open-on-focus="openOnFocus"
-                field="filteredTags"
-                icon="label"
-                @input="hey"
-                @typing="getFilteredTags">
-            </b-taginput>
-        </b-field>
-        <pre style="max-height: 400px"><b>Tags:</b>{{ form.tags }}</pre>
-    </section>
+    </section>        
     <button class="button" type="is-dark" @click="UpdateUser">更新</button>
     <!-- {{filteredTags}} -->
 </div>
@@ -130,44 +112,21 @@ export default {
             twitter_id : "",
             facebook_id : "",
             wantedly_id : "",
-            github_id : "",
-            tags: [],
+            github_id : ""
         },
         filteredTags : [],
         data:[],
-        allowNew: false,
-        openOnFocus: false,
         showWeekNumber: false,
         activeTab: 1,
         count : 0
     }
     
   },
-  watch: {
-        filteredTags: function(val) {
-            if (val.length === 0){
-                this.filteredTags = this.data
-            }
-        },
-         
-        form: {
-        handler: function (val, oldVal) {
-            this.count += 1
-            if (this.count > 0) {
-
-            }
-        },
-        deep: true
-      }
-    },
     created() {
-       this.fetchUser()
-       this.FetchCategories()
-       
+       this.fetchUser()       
     },
 
     methods: {
-        
         UploadImage(image) {
         this.$axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.idToken}`
             var formData = new FormData();
@@ -201,25 +160,6 @@ export default {
             })
             }
         },
-        FetchCategories () {
-            this.$axios.$get('/api/v1/fetch_categories')
-            .then(res => {
-                for (var i = 0;  i < res.tag.length;  i++) {
-                    this.filteredTags.push(res.tag[i]["tag_name"]);
-                    this.data.push(res.tag[i]["tag_name"]);
-                }   
-            })
-            .catch ( error => {
-                if (error.response.status == "401") {
-                    console.log("tokenが無効です")
-                    this.$buefy.toast.open({
-                        duration: 5000,
-                        message: 'サーバー内でも問題が発生しました',
-                        type: 'is-danger'
-                    })
-                }
-            })
-        },
         async fetchUser () {
             await this.$axios.$get('/api/v1/auto_login',{ 
                 headers:{
@@ -239,14 +179,7 @@ export default {
                 this.form.github_id = response.user.github_id
             }) 
         },
-        getFilteredTags(text) {
-            this.filteredTags = this.filteredTags.filter((option) => {
-                return option
-                .toString()
-                .toLowerCase()
-                .indexOf(text.toLowerCase()) >= 0
-            })
-        },
+ 
         async UpdateUser() {
             this.$axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.idToken}`
             this.$axios.$put('/api/v1/my_pages/update/',{ 
@@ -282,10 +215,7 @@ export default {
                 }
             })
         },
-        hey () {
-            console.log("hey")
-            this.filteredTags = this.data
-        },
+       
         hello (value) {
             console.log(value)
             this.form.birth = value
