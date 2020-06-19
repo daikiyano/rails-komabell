@@ -12,6 +12,7 @@
           @isCloseModal="closeModal" 
           @ChangeForm="ChangeForm($event)" 
     />
+
       
     </div>
     <div>
@@ -35,6 +36,7 @@
     </div>
   </section>
   </div>
+ 
 </template>
 
 <script>
