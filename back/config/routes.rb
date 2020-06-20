@@ -4,13 +4,14 @@ Rails.application.routes.draw do
     namespace 'v1' do
       namespace :mypage do
         resource :user_images, only: [:update]
+        resource :my_pages, only: [:index,:update]
       end
       namespace :myskill do
         resource :user_skill_categories, only: [:index,:create,:update]
         get 'user_skill_categories/index'
       end
-      put 'my_pages/update' =>  "my_pages#update"
-      get 'my_pages/index'
+      # put 'my_pages/update' =>  "my_pages#update"
+      # get 'my_pages/index'
       #Sign Up用のみ
       get "/fetch_categories", to: "skill_categories#fetch_categories"
       get "/search/:book_category", to: "books#search"

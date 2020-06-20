@@ -17,7 +17,7 @@
             @ChangeImage="ChangeImage($event)" 
             @UploadImage="UploadImage()" 
         />
-      
+
         <div class="media-content">
           <div class="content">
             <p>
@@ -40,11 +40,23 @@
             <h3>Github</h3>
             <div class="github-link">
   <i class="fab fa-github-square"></i>
-  <a href="https://github.com/daikiyano" target="_blank">@daikiyano</a>
+  <a :href="'https://github.com/'+user.github_id" target="_blank">@{{user.github_id}}</a>
 </div>
-<a href="https://github.com/daikiyano" target="_blank">
-  <img style="width: 100%;" src="https://grass-graph.moshimo.works/images/daikiyano.png">
+<a :href="'https://github.com/'+user.github_id" target="_blank">
+  <img style="width: 100%;" :src="'https://grass-graph.moshimo.works/images/'+user.github_id+'.png'">
 </a>
+
+<h3>My本棚</h3>
+<div style="box-shadow: 0 1px 16px 0 rgba(0, 0, 0, 0.15);　display: inline-block; margin: 10px 20px; text-align: center;">
+  <img style="width: 170px; height: 220px;" src="https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/3513/9784297113513.jpg?_ex=200x200" alt="">
+</div>
+<div style="box-shadow: 0 1px 16px 0 rgba(0, 0, 0, 0.15);　display: inline-block; margin: 10px 20px; text-align: center;">
+  <img style="width: 170px; height: 220px;" src="https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/4533/9784777514533.jpg?_ex=200x200" alt="">
+</div>
+<div style="box-shadow: 0 1px 16px 0 rgba(0, 0, 0, 0.15);　display: inline-block; margin: 10px 20px; text-align: center;">
+         <img style="width: 170px; height: 220px;" src="https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8691/9784844398691.jpg?_ex=200x200" alt="">
+</div>
+
              <h3>技術タグ</h3>
              
              <div v-for="(tag, index) in this.SkillTags" :key="index" style="display: inline; margin: 5px 5px; text-align: center;">

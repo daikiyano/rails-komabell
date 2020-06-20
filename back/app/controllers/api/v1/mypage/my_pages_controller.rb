@@ -1,13 +1,15 @@
-class Api::V1::MyPagesController < ApplicationController
+class Api::V1::Mypage::MyPagesController < ApplicationController
   # skip_before_action :require_login, only: [:update]
   
   def update
     if session_user
       user = User.find(session_user.id)  
-      if user.update(mypage_params)
+      begin
+      user.update!(mypage_params)
         response_success(:user, :update) 
-      else
-        response_unprocessable_entity
+      rescue => e
+        logger.error e
+        # response_unprocessable_entity
       end
     else
       response_unauthorized

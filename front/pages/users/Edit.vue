@@ -182,7 +182,7 @@ export default {
  
         async UpdateUser() {
             this.$axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.idToken}`
-            this.$axios.$put('/api/v1/my_pages/update/',{ 
+            this.$axios.$patch('/api/v1/mypage/my_pages/',{ 
                 user : {
                     username : this.form.username,
                     gender : this.form.gender,

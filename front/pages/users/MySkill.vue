@@ -261,7 +261,7 @@ export default {
             console.log(this.CategoryIdList)
 
          this.$axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.idToken}`    
-            this.$axios.$put('/api/v1/myskill/user_skill_categories',{ 
+            this.$axios.$patch('/api/v1/myskill/user_skill_categories',{ 
                 
                 user_skill_category : {
                     skill_arrays : this.skill_tags,

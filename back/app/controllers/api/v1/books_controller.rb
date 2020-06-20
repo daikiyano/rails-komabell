@@ -16,6 +16,7 @@ module Api
                     rescue => e
                         logger.error e
                         response_not_found
+                    end
                 else
                     response_bad_request
                 end
