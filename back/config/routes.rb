@@ -10,8 +10,7 @@ Rails.application.routes.draw do
         resource :user_skill_categories, only: [:index,:create,:update]
         get 'user_skill_categories/index'
       end
-      # put 'my_pages/update' =>  "my_pages#update"
-      # get 'my_pages/index'
+     
       #Sign Up用のみ
       get "/fetch_categories", to: "skill_categories#fetch_categories"
       get "/search/:book_category", to: "books#search"

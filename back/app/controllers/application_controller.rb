@@ -52,8 +52,9 @@ class ApplicationController < ActionController::API
         render status: 401, json: { status: 401, message: 'Unauthorized' }
       end
 
-      def response_unprocessable_entity
-        render status: 422, json: { status: 422, message: 'unprocessable_entity' }
+      def response_unprocessable_entity(error)
+        logger.debug(error)
+        render status: 422, json: { status: 422, message: 'unprocessable_entity',validation: error }
       end
       
       # 404 Not Found

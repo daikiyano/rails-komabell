@@ -153,22 +153,6 @@ export default {
                 this.filteredTags = res.tag
                 
                 this.data = res.tag
-                // console.log(res.tag)
-                // for (var i = 0;  i < res.tag.length;  i++) {
-
-                // //     // this.filteredTags.push([res.tag[i]["id"],res.tag[i]["tag_name"]])
-                // //     //  this.filteredTags[res.tag[i]["id"]] = res.tag[i]["tag_name"];
-                //   this.filteredTags.push([this.filteredTags["id"] = res.tag[i]["id"],this.filteredTags["tag_name"] = res.tag[i]["tag_name"]])
-                //   this.data.push([this.filteredTags["id"] = res.tag[i]["id"],this.filteredTags["tag_name"] = res.tag[i]["tag_name"]])
-
-                    // this.filteredTags["id"] = res.tag[i]["id"];
-                    // this.filteredTags["tag_name"] = res.tag[i]["tag_name"];
-                //     this.data.id = res.tag[i]["id"];
-                //     this.data.id = res.tag[i]["tag_name"];
-                  
-                //     // this.data[res.tag[i]["id"]] = res.tag[i]["tag_name"];
-                // }   
-                // console.log(this.filteredTags)
                 
             })
             .catch ( error => {
@@ -183,12 +167,6 @@ export default {
             })
         },
         FetchUserSkills () {
-          // console.log(localStorage.idToken)
-          // idtoken = localStorage.getItem(idToken)
-          // console.log(idtoken)
-          // if (process.browser) {
-          //   console.log(localStorage.idToken)
-          // }
             this.$axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.idToken}`
             this.$axios.$get('/api/v1/myskill/user_skill_categories/index')
             .then(res => {

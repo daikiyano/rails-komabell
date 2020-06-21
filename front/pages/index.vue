@@ -12,8 +12,6 @@
           @isCloseModal="closeModal" 
           @ChangeForm="ChangeForm($event)" 
     />
-
-      
     </div>
     <div>
       <h1>技術カテゴリ</h1>
@@ -27,10 +25,13 @@
       <b-button type="is-dark">技術カテゴリ一覧を見る</b-button>
       <div>
         <h1>書籍一覧</h1>
-        <div v-for="(book,index) in this.books" :key="index" style="box-shadow: 0 1px 16px 0 rgba(0, 0, 0, 0.15);　display: inline-block; margin: 10px 20px; text-align: center;">
+        <div v-for="(book,index) in this.books" :key="index" style="box-shadow: 0 1px 16px 0 rgba(0, 0, 0, 0.15);　display: inline-block; margin: 20px 20px; text-align: center; position: relative;">
+          
           <nuxt-link :to="{name:'books-id',params:{id:book.params.isbn}}">
           <img style="width: 170px; height: 220px;" :src="book.params.largeImageUrl" alt="TOP本"> 
           </nuxt-link>  
+          <span style="position: absolute; left: 0; bottom: -20px; "><b-button type="is-info" size="is-small">本棚に登録</b-button></span>
+          
         </div>
       </div>
     </div>

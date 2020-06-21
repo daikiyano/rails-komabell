@@ -4,12 +4,12 @@ class Api::V1::Mypage::MyPagesController < ApplicationController
   def update
     if session_user
       user = User.find(session_user.id)  
-      begin
-      user.update!(mypage_params)
+     
+      if user.update(mypage_params)
         response_success(:user, :update) 
-      rescue => e
-        logger.error e
-        # response_unprocessable_entity
+      else
+        logger.debug(user.errors.full_messages)
+        response_unprocessable_entity(user.errors.full_messages)
       end
     else
       response_unauthorized

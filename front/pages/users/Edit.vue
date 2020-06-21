@@ -71,7 +71,11 @@
             />
          </ValidationObserver>
          
-    </section>        
+    </section>       
+    <div v-for="(ValidationError, index) in this.ValidationErrors" :key="index">
+        <span style="color: red;">{{ValidationError}}</span>
+        </div>
+
     <button class="button" type="is-dark" @click="UpdateUser">更新</button>
     <!-- {{filteredTags}} -->
 </div>
@@ -118,7 +122,8 @@ export default {
         data:[],
         showWeekNumber: false,
         activeTab: 1,
-        count : 0
+        count : 0,
+        ValidationErrors : []
     }
     
   },
@@ -195,6 +200,7 @@ export default {
                 }
             })
             .then(response => {
+                console.log(response)
                 this.$buefy.toast.open({
                     duration: 5000,
                     message: '編集が完了しました',
@@ -204,15 +210,16 @@ export default {
                  console.log(response)
             })
             .catch ( error => {
-                if (error.response.status == "401" || error.response.status == "500" || error.response.status == "422") {
-                    console.log("tokenが無効です")
-                        // this.error = "Tokenが無効です"
+                if (error.response.status == "422") {
+                    this.ValidationErrors = error.response.data.validation
+                } else {
                     this.$buefy.toast.open({
                         duration: 5000,
-                        message: 'サーバー内で問題が発生しました',
+                        message: "サーバー内で問題が発生しました",
                         type: 'is-danger'
                     })
                 }
+                
             })
         },
        
