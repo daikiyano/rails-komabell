@@ -30,10 +30,16 @@
           <nuxt-link :to="{name:'books-id',params:{id:book.params.isbn}}">
           <img style="width: 170px; height: 220px;" :src="book.params.largeImageUrl" alt="TOP本"> 
           </nuxt-link>  
-          <span style="position: absolute; left: 0; bottom: -20px; "><b-button type="is-info" size="is-small">本棚に登録</b-button></span>
+          <span style="position: absolute; left: 0; bottom: -20px; "><b-button type="is-info" size="is-small" @click="PostBookShelf(book.params.isbn,book.params.largeImageUrl)">本棚に登録</b-button></span>
           
         </div>
       </div>
+      <star-rating v-bind:increment="0.5"
+             v-bind:max-rating="3"
+             inactive-color="#000"
+             active-color="#f00"
+             v-bind:star-size="90">
+</star-rating>
     </div>
   </section>
   </div>
@@ -42,11 +48,15 @@
 
 <script>
   import Modal from '~/components/Modal.vue'
+  import StarRating from 'vue-star-rating'
+
+
 
 export default {
   name: 'HomePage',
   components: {
-        Modal 
+        Modal,
+        StarRating
         },
   data() {
     return {
@@ -188,6 +198,36 @@ methods: {
 
       }
         })
+    },
+    PostBookShelf(lsbn,imageurl) {
+     console.log(lsbn)
+     console.log(imageurl)
+     this.$axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.idToken}`    
+     this.$axios.$post('/api/v1/book/bookshelves', {
+       bookshelf : {
+         lsbn : lsbn,
+         imageurl : imageurl
+       }
+
+     })
+      .then(res => {
+        console.log(res)
+     
+        })
+    .catch ( error => {
+      if (error.response.status == "401") {
+          console.log("tokenが無効です")
+          // this.error = "Tokenが無効です"
+          this.$buefy.toast.open({
+            duration: 5000,
+            message: 'サーバー内でも問題が発生しました',
+            type: 'is-danger'
+          })
+         
+
+      }
+        })
+     
     }
     
 }
@@ -195,3 +235,4 @@ methods: {
 }
 </script>
 
+// /api/v1/book/bookshelves

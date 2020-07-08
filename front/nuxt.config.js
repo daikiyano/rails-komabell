@@ -30,8 +30,9 @@ export default {
   plugins: [
     'plugins/axios',
     { src: '@/plugins/vue-croppie', mode: 'client'  },
-
-    { src: '@/plugins/vee-validate' }
+    { src: '@/plugins/vee-validate' },
+    { src: '~/plugins/star-rating.js', mode: 'client' }
+    
   ],
 
   router: {
@@ -84,7 +85,7 @@ export default {
     /*
     ** You can extend webpack config here
     */
-   transpile: ["vee-validate/dist/rules"],
+   transpile: ["vee-validate/dist/rules"] ['star-rating'],
     extend (config, ctx) {
     }
   }

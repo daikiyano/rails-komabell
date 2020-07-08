@@ -19,6 +19,7 @@
     "vee-validate": "^3.3.0",
     "vue-chartjs": "^3.5.0",
     "vue-croppie": "^2.0.1",
+    "vue-star-rating": "^1.6.1",
     "vuelidate": "^0.7.5"
   },
   "devDependencies": {}

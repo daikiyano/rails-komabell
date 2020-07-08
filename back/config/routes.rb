@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+
   namespace 'api' do
     namespace 'v1' do
       namespace :mypage do
@@ -10,7 +11,10 @@ Rails.application.routes.draw do
         resource :user_skill_categories, only: [:index,:create,:update]
         get 'user_skill_categories/index'
       end
-     
+
+      namespace :book do
+        resource :bookshelves, only: [:index,:create,:update]
+      end
       #Sign Up用のみ
       get "/fetch_categories", to: "skill_categories#fetch_categories"
       get "/search/:book_category", to: "books#search"
