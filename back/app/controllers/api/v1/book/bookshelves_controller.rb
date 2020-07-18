@@ -1,7 +1,9 @@
 class Api::V1::Book::BookshelvesController < ApplicationController
   
   def index
-    
+    @bookshelves = Bookshelf.where(user_id: session_user.id)
+    logger.debug(@bookshelves)
+    render json: { status: 'success', data: @books}
   end
   def create
     user_id = session_user.id

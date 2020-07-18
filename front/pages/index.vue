@@ -30,7 +30,7 @@
           <nuxt-link :to="{name:'books-id',params:{id:book.params.isbn}}">
           <img style="width: 170px; height: 220px;" :src="book.params.largeImageUrl" alt="TOP本"> 
           </nuxt-link>  
-          <span style="position: absolute; left: 0; bottom: -20px; "><b-button type="is-info" size="is-small" @click="PostBookShelf(book.params.isbn,book.params.largeImageUrl)">本棚に登録</b-button></span>
+          <!-- <span style="position: absolute; left: 0; bottom: -20px; "><b-button type="is-info" size="is-small" @click="PostBookShelf(book.params.isbn,book.params.largeImageUrl)">本棚に登録</b-button></span> -->
           
         </div>
       </div>
@@ -71,7 +71,7 @@ export default {
 
     created () {
       this.FetchCategories()
-
+      this.$axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.idToken}`
       this.$axios.$get('/api/v1/search/001005')
       .then(res => {
         this.books = ""
@@ -177,6 +177,7 @@ methods: {
     },
     ChangeCategory (TagName) {
       console.log(TagName)
+      this.$axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.idToken}`
       this.$axios.$get(`/api/v1/search/${TagName}`)
       .then(res => {
         this.books = ""
@@ -199,36 +200,36 @@ methods: {
       }
         })
     },
-    PostBookShelf(lsbn,imageurl) {
-     console.log(lsbn)
-     console.log(imageurl)
-     this.$axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.idToken}`    
-     this.$axios.$post('/api/v1/book/bookshelves', {
-       bookshelf : {
-         lsbn : lsbn,
-         imageurl : imageurl
-       }
+    // PostBookShelf(lsbn,imageurl) {
+    //  console.log(lsbn)
+    //  console.log(imageurl)
+    //  this.$axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.idToken}`    
+    //  this.$axios.$post('/api/v1/book/bookshelves', {
+    //    bookshelf : {
+    //      lsbn : lsbn,
+    //      imageurl : imageurl
+    //    }
 
-     })
-      .then(res => {
-        console.log(res)
+    //  })
+    //   .then(res => {
+    //     console.log(res)
      
-        })
-    .catch ( error => {
-      if (error.response.status == "401") {
-          console.log("tokenが無効です")
-          // this.error = "Tokenが無効です"
-          this.$buefy.toast.open({
-            duration: 5000,
-            message: 'サーバー内でも問題が発生しました',
-            type: 'is-danger'
-          })
+    //     })
+    // .catch ( error => {
+    //   if (error.response.status == "401") {
+    //       console.log("tokenが無効です")
+    //       // this.error = "Tokenが無効です"
+    //       this.$buefy.toast.open({
+    //         duration: 5000,
+    //         message: 'サーバー内でも問題が発生しました',
+    //         type: 'is-danger'
+    //       })
          
 
-      }
-        })
+    //   }
+    //     })
      
-    }
+    // }
     
 }
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_21_020956) do
+ActiveRecord::Schema.define(version: 2020_07_18_022453) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(version: 2020_06_21_020956) do
 
   create_table "bookshelves", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.string "lsbn", null: false
+    t.string "isbn", null: false
     t.string "imageurl"
     t.text "memo"
     t.datetime "created_at", precision: 6, null: false

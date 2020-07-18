@@ -1,7 +1,7 @@
 module Api
     module V1 
         class BooksController < ApplicationController
-            skip_before_action :require_login, only: [:search,:show]
+            # skip_before_action :require_login, only: [:show]
             def search
                 category = params[:book_category]
 
@@ -12,6 +12,10 @@ module Api
                         else 
                             @books = RakutenWebService::Books::Book.search(title: category)
                         end
+                        
+                        # @bookshelves = Bookshelf.where(user_id: session_user.id)
+                        logger.debug(session_user.id)
+                        logger.debug(@bookshelves.to_yaml)
                         render json: { status: 'success', data: @books}
                     rescue => e
                         logger.error e
@@ -20,6 +24,8 @@ module Api
                 else
                     response_bad_request
                 end
+                logger.debug("hey")
+                logger.debug(session_user.id)
                    
                 # @root = RakutenWebService::Ichiba::Genre.root # root genre
             #    ビジネス
@@ -31,7 +37,9 @@ module Api
             def show
                 begin
                     @books = RakutenWebService::Books::Book.search(isbn: params[:isbn])
-                    render json: { status: 'success', data: @books }
+                    @bookshelf = Bookshelf.exists?(lsbn: params[:isbn],user_id: session_user.id)
+                     logger.debug(@bookshelf)
+                    render json: { status: 'success', data: @books, IsBookshelf: @bookshelf}
                 rescue => e
                     logger.error e
                     response_not_found
