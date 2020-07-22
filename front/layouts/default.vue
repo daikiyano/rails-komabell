@@ -15,14 +15,16 @@
 
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
-      <a class="navbar-item">
-        My 本棚
-      </a>
-
+      <div class="navbar-item">
+      <div class="buttons">
+      <nuxt-link to="/users/bookshelf" type="is-success" class="button navbar-item" v-if="this.$auth.loggedIn">
+        <strong>My 本棚</strong>
+      </nuxt-link>
+      </div>
+      </div>
       <a class="navbar-item">
         新着本
       </a>
-
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link">
           本を探す

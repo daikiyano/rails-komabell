@@ -7,12 +7,15 @@
                  aria-role="dialog"
                  width="1000"
                  :on-cancel="closeModal"
+                 scroll="clip"
                  aria-modal>
         <div class="modal-card" style="width: auto">
           <component 
             :is="FormComponent"
+            :BookDetail="BookDetail"
             @isCloseModal="closeModal"
             @ChangeForm="$emit('ChangeForm', $event)"
+            @UpdateMemo="$emit('UpdateMemo', $event)"
             @ChangeImage="$emit('ChangeImage', $event)"
             @UploadImage="$emit('UploadImage')"
           >
@@ -23,14 +26,16 @@
 </template>
 
 <script>
-  import Login from '~/components/Login.vue'
-  import SignUp from '~/components/SignUp.vue'
-  import ImageUploadWithValidation from '~/components/Form/ImageUploadWithValidation.vue'
+import Login from '~/components/Login.vue'
+import SignUp from '~/components/SignUp.vue'
+import Memo from '~/components/BookShelf/Memo.vue'
+import ImageUploadWithValidation from '~/components/Form/ImageUploadWithValidation.vue'
     export default {
         name: 'Modal',
         components: {
             Login,
             SignUp,
+            Memo,
             ImageUploadWithValidation
         },
         props: {
@@ -42,6 +47,10 @@
             type: String,
             required: true
         },
+        'BookDetail': {
+            type: Object
+        },
+        
         },
         data() {
             return {
@@ -60,4 +69,18 @@
 .modal-background {
 background-color:rgba(255,255,255,.97);
 }
+card-content
+/* .modal-card-body { */
+
+.modal-card-body {
+    background-color: red;
+    /* overflow: visible !important; */
+    
+
+}
+.modal-card {
+    overflow: auto;
+}
+
 </style>
+

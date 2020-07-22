@@ -13,7 +13,9 @@
   "dependencies": {
     "@nuxtjs/auth": "^4.9.1",
     "@nuxtjs/axios": "^5.9.7",
+    "@nuxtjs/markdownit": "^1.2.10",
     "chart.js": "^2.9.3",
+    "mavon-editor": "^2.9.0",
     "nuxt": "^2.0.0",
     "nuxt-buefy": "^0.3.2",
     "vee-validate": "^3.3.0",

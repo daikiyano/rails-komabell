@@ -37,7 +37,7 @@ module Api
             def show
                 begin
                     @books = RakutenWebService::Books::Book.search(isbn: params[:isbn])
-                    @bookshelf = Bookshelf.exists?(lsbn: params[:isbn],user_id: session_user.id)
+                    @bookshelf = Bookshelf.exists?(isbn: params[:isbn],user_id: session_user.id)
                      logger.debug(@bookshelf)
                     render json: { status: 'success', data: @books, IsBookshelf: @bookshelf}
                 rescue => e

@@ -13,7 +13,9 @@ Rails.application.routes.draw do
       end
 
       namespace :book do
-        resource :bookshelves, only: [:index,:create,:update]
+        resource :bookshelves, only: [:index,:create,:update,:destroy]
+        get '/bookshelves', to: "bookshelves#index"
+        resource :memos, only: [:update]
       end
       #Sign Up用のみ
       get "/fetch_categories", to: "skill_categories#fetch_categories"
