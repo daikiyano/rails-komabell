@@ -5,6 +5,7 @@ module Api
 
             def fetch_categories
                 @skillcategories = SkillCategory.select(:id, :tag_name,:icon_url)
+                logger.debug("#######TEST#####")
                 render json: { status: 'success',tag: @skillcategories}
             end
         end
