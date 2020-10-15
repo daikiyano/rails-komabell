@@ -1,0 +1,41 @@
+version: "3"
+
+services:
+  # db:
+  #   container_name: app_db
+  #   # image: postgres:11.4-alpine
+  #   # environment:
+  #   #   - TZ=Asia/Tokyo
+  #   # volumes:
+  #   #   - ./back/tmp/db:/var/lib/postgresql/data
+  #   image: mysql:5.7
+  #   volumes:
+  #     - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+  #     - ./docker/mysql/data:/var/lib/mysql
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: password
+  #     TZ: "Asia/Tokyo"
+  #   # ports:
+  #   #   - '3306:3306'
+
+  # back:
+  #   container_name: app_back
+  #   build: back/
+  #   volumes:
+  #     - ./back:/app
+  #   depends_on:
+  #     - db
+  #   ports:
+  #     - 3000:3000
+
+  front:
+    container_name: app_front
+    build: .
+    command: npm run dev
+    volumes:
+      - .:/front
+    ports:
+      - 8080:3000
+
+    # depends_on:
+    #   - back

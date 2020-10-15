@@ -1,0 +1,31 @@
+{
+  "name": "front_app",
+  "version": "1.0.0",
+  "description": "My dazzling Nuxt.js project",
+  "author": "daiki yano",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@nuxtjs/auth": "^4.9.1",
+    "@nuxtjs/axios": "^5.9.7",
+    "@nuxtjs/dotenv": "^1.4.1",
+    "@nuxtjs/markdownit": "^1.2.10",
+    "@nuxtjs/moment": "^1.6.1",
+    "chart.js": "^2.9.3",
+    "mavon-editor": "^2.9.0",
+    "moment": "^2.27.0",
+    "nuxt": "^2.0.0",
+    "nuxt-buefy": "^0.3.2",
+    "vee-validate": "^3.3.0",
+    "vue-chartjs": "^3.5.0",
+    "vue-croppie": "^2.0.1",
+    "vue-star-rating": "^1.6.1",
+    "vuelidate": "^0.7.5"
+  },
+  "devDependencies": {}
+}
