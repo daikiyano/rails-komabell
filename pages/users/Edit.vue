@@ -49,7 +49,7 @@
             vid="password"
             v-model="form.twitter_id"
             />
-            <BInputWithValidation
+            <InputWithValidation
             icon="facebook"
             placeholder="Facebook id"
             rules="max:25" 
@@ -87,7 +87,7 @@
 import MyPageTab from '~/components/users/MyPageTab.vue'
 import EmailInput from '~/components/Form/EmailInput.vue'
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
-import InputWithValidation from "~/components/Form/BinputWithValidation.vue";
+import InputWithValidation from "~/components/Form/InputWithValidation.vue";
 import BSelectWithValidation from "~/components/Form/BSelectWithValidation.vue";
 import ImageUploadWithValidation from '~/components/Form/ImageUploadWithValidation.vue'
 
