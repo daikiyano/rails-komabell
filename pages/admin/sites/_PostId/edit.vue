@@ -4,37 +4,37 @@
     <main style="top: 50px; position: relative;">
          <ValidationObserver ref="observer" v-slot="{ passes }">
      <form @submit.prevent>
-         <BInputWithValidation
+         <InputWithValidation
             rules="required" 
             label="WEBサイト名"
             vid="title"
             v-model="title"
             />
-        <BInputWithValidation
+        <InputWithValidation
             rules="required" 
             label="価格"
             vid="price"
             v-model="price"
         />
-        <BInputWithValidation
+        <InputWithValidation
             rules="required" 
             label="難易度"
             vid="difficultyLevel"
             v-model="difficultyLevel"
         />
-        <BInputWithValidation
+        <InputWithValidation
             rules="required" 
             label="URL"
             vid="url"
             v-model="url"
         />
-        <BInputWithValidation
+        <InputWithValidation
             rules="required" 
             label="environment"
             vid="environment"
             v-model="environment"
         />
-        <BInputWithValidation
+        <InputWithValidation
             rules="required|max:200" 
             label="description"
             type="textarea"
@@ -61,7 +61,7 @@
 
 <script>
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
-import BInputWithValidation from "~/components/Form/BinputWithValidation.vue";
+import InputWithValidation from "~/components/Form/InputWithValidation.vue";
 import BSelectWithValidation from "~/components/Form/BSelectWithValidation.vue";
 
 
@@ -69,7 +69,7 @@ import BSelectWithValidation from "~/components/Form/BSelectWithValidation.vue";
     components: {
         ValidationObserver,
         ValidationProvider ,
-        BInputWithValidation,
+        InputWithValidation,
         BSelectWithValidation
     },
     data() {

@@ -69,7 +69,7 @@
      
      <span style="color: red;">{{ErrorMessage}}</span><br>
      <ValidationObserver ref="observer" v-slot="{ passes }">
-     <BInputWithValidation
+     <InputWithValidation
             rules="required|max:200" 
             label="評価コメント"
             type="textarea"
@@ -101,7 +101,7 @@
 
 <script>
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
-import BInputWithValidation from "~/components/Form/BinputWithValidation.vue";
+import InputWithValidation from "~/components/Form/InputWithValidation.vue";
 
   import StarRating from 'vue-star-rating'
 
@@ -111,7 +111,7 @@ import BInputWithValidation from "~/components/Form/BinputWithValidation.vue";
         StarRating,
         ValidationObserver,
         ValidationProvider ,
-        BInputWithValidation
+        InputWithValidation
 
     },
     data() {

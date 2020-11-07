@@ -5,7 +5,7 @@
     <section>
       <ValidationObserver ref="observer" v-slot="{ passes }">
           <EmailInput  v-model="form.email" disabled/>
-          <BInputWithValidation
+          <InputWithValidation
             rules="required|max:25" 
             icon="account"
             label="ユーザー名"
@@ -31,7 +31,7 @@
                 <option value=2>女性</option>
                 <option value=3>その他</option>
             </BSelectWithValidation>
-            <BInputWithValidation
+            <InputWithValidation
             rules="max:200" 
             label="自己紹介"
             type="textarea"
@@ -42,7 +42,7 @@
                 pack="fas"
                 icon="tachometer-alt">
             </b-icon>
-          <BInputWithValidation
+          <InputWithValidation
             rules="max:25"  
             icon="twitter"
             placeholder="Twitter id"
@@ -57,14 +57,14 @@
             v-model="form.facebook_id"
             />
               
-          <BInputWithValidation
+          <InputWithValidation
             placeholder="wantedly id"
             rules="max:25"  
             vid="wantedly"
             v-model="form.wantedly_id"
             />
         
-          <BInputWithValidation
+          <InputWithValidation
             placeholder="GitHub id"
             icon="github"
             rules="max:25" 
@@ -87,7 +87,7 @@
 import MyPageTab from '~/components/users/MyPageTab.vue'
 import EmailInput from '~/components/Form/EmailInput.vue'
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
-import BInputWithValidation from "~/components/Form/BinputWithValidation.vue";
+import InputWithValidation from "~/components/Form/BinputWithValidation.vue";
 import BSelectWithValidation from "~/components/Form/BSelectWithValidation.vue";
 import ImageUploadWithValidation from '~/components/Form/ImageUploadWithValidation.vue'
 
@@ -101,7 +101,7 @@ export default {
         EmailInput,
         ValidationObserver,
         ValidationProvider ,
-        BInputWithValidation,
+        InputWithValidation,
         BSelectWithValidation
     },
     data() {
