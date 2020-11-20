@@ -17,6 +17,24 @@
         <b-field label="environment">
             <b-input v-model="environment"></b-input>
         </b-field>
+        <b-field>
+             <!-- :data="filteredTags" -->
+            <b-taginput
+            @remove="RemoveTag"
+                v-model="tags"
+               :data="filteredTags"
+                autocomplete
+                placeholder="学べる技術"
+                :allow-new="true"
+                field="tag_name"
+                icon="label"
+                 type="is-dark"
+                 @add="CheckExistTags"   
+                @typing="getFilteredTags">
+            </b-taginput>
+        </b-field>
+         <pre style="max-height: 400px"><b>スキルタグ配列チェックTags:</b>{{ tags }}</pre>
+         
         <b-field label="概要">
             <b-input maxlength="200" type="textarea" v-model="description"></b-input>
         </b-field>
@@ -29,8 +47,11 @@
             <span class="file-name" v-if="file">
                 {{ file.name }}
             </span>
-        </b-upload>
+        </b-upload><br>
+        
     </b-field>
+    {{skill_tags}}
+    
         <button type="submit" @click="PostSites()">学習サイト情報追加</button>
     </form>
     </main>
@@ -47,17 +68,27 @@
     },
     data() {
       return {
-          title : "",
-          description : "",
-          price : "",
-          difficultyLevel : "",
-          url : "",
-          environment : "",
-          file : ""
+        title : "",
+        description : "",
+        price : "",
+        difficultyLevel : "",
+        url : "",
+        environment : "",
+        file : "",
+        DeleteTags : [],
+        tags: [],
+        skills: null,
+        skill_tags : [],
+        CategoryIdList : [], 
+        filteredTags : [],
+        data:[],
+        IsUserSkills : false,
+        allowNew: false,
+        openOnFocus: false,
     }
     },
     created () {
-      
+      this.FetchCategories()
     },
   methods: {
     PostSites() {
@@ -105,7 +136,50 @@
                 }
             })
             }
+    },
+    FetchCategories () {
+        this.$axios.$get('/api/v1/fetch_categories')
+        .then(res => {
+            this.filteredTags = res.tag
+            this.data = res.tag       
+        })
+        .catch ( error => {
+            if (error.response.status == "401") {
+                console.log("tokenが無効です")
+                this.$buefy.toast.open({
+                    duration: 5000,
+                    message: 'サーバー内でも問題が発生しました',
+                    type: 'is-danger'
+                 })
+             }
+        })
+    },
+    getFilteredTags(text) {
+        this.filteredTags = this.data.filter((option) => {
+            return option.tag_name
+            .toString()
+            .toLowerCase()
+            .indexOf(text.toLowerCase()) >= 0
+        })
+      },
+    ChangeSkillTagsArrays(index,skill_id,tag,e) {
+      var skill_tags = this.skill_tags;
+      console.log("#######")
+        if (skill_tags.length === 0) {
+          console.log("length")
+          this.skill_tags.push([skill_id,tag,e])
+        } else {
+          // 同じskill_idが存在していたらslice更新、存在しない場合はpush追加
+          console.log(this.skill_tags)
+          const result = skill_tags.some((skill_tag) => skill_tag[0] === skill_id);
+        if (result) {
+          const value = [skill_id, tag,e]
+          skill_tags.splice(index,1,value)
+        } else {
+          skill_tags.push([skill_id,tag,e])
         }
+        }
+     },
     
   }
  }
