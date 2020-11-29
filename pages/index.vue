@@ -1,10 +1,39 @@
 <template>
 <div>
-  <div >
+  <div>
     <img class="is-centered" src="@/assets/image/top_logo.png">
   </div>
 
-  <h1 class="title-line">hey</h1>
+  <h1 class="title is-3 title-line">ProHubの特徴</h1>
+  <div class="content is-medium columns is-desktop">
+    <div class="column">
+      <h1 class="title is-4 title-line" style="text-align: center;">ProHubとは</h1>
+      <p style="padding: 30px; auto;">
+        <strong>ProHubではオンライン上のプログラミング学習サービスのまとめサイトです。
+          プログラミングを始めたいけど、どうやって始めれば良いか分からない。そんなプログラミング初心者にはぴったりのサイトです。
+          </strong>
+      </p>
+    </div>
+    <div class="column">
+      <img class="is-centered" src="@/assets/image/top2.png">
+    </div>
+      </div>
+    <div class="content is-medium columns is-desktop">
+    <div class="column">
+      <img class="is-centered" src="@/assets/image/top3.png">
+    </div>
+    <div class="column">
+      <h1 class="title is-4 title-line" style="text-align: center;">どんな人向け？</h1>
+      <p style="padding: 30px; auto;">
+        <strong>
+          プログラミングを始めたいけど、どうやって始めれば良いか分からない。そんなプログラミング初心者にはぴったりのサイトです。
+          </strong>
+      </p>
+    </div>
+  </div>
+
+
+  <h1 class="title is-3 title-line">About</h1>
 
  <section class="section" style="text-align: center;">
     <main style="top: 50px; position: relative;">
@@ -352,17 +381,17 @@
 .title-line{
 position:relative;
 display: block;
+font-size: 30px;
+margin: 10px auto; 
+text-align: center;
 }
 .title-line::after{
    content:"";
-   display:block;
-   width:80px;
-   height:5px;
-   background-color:#64bc6e;
-   position:absolute;
-   bottom: -15px;
-   margin: 0 auto;
-   text-align: canter;
+    display: block;
+    width: 60px;
+    height: 5px;
+    margin: 8px auto 0 auto;
+    background-color:#64bc6e;
    
 }
 </style>
