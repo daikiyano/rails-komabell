@@ -5,7 +5,7 @@
         <ValidationObserver ref="observer" v-slot="{ passes }">
             <section class="modal-card-body">
         <header class="modal-card-head">
-            <p class="modal-card-title">メールアドレスでログインする</p>
+            <p class="modal-card-title" style="font-size: 14px;"><b>メールアドレスでログインする</b></p>
         </header>
         <section>
             <EmailInput v-model="email" />
@@ -15,16 +15,16 @@
                  <!-- </li> -->
                  <li>{{serverError}}</li>
             </ul>
-            <a @click="ChangeForm()">初めて利用する方</a>
+            <a @click="ChangeForm()" style="font-size: 14px;">初めて利用する方</a>
         </section>
 
         <footer class="modal-card-foot">
             <li style="list-style: none; margin: 0 auto;">
-                <ul><b-button style="width: 300px;" class="button" type="is-inline-dark" @click="passes(login)">Eメールでログイン</b-button></ul>
-                <ul><b-button style="width: 300px;" class="button" type="is-inline-dark" @click="AuthGoogle"><img src="https://img.icons8.com/color/48/000000/google-logo.png" style="height: 15px;">Googleでログイン</b-button></ul>
-                <ul><button style="width: 300px;" class="button" type="is-inline-dark" @click="AuthGithub"><img src="https://img.icons8.com/fluent/48/000000/github.png" style="height: 15px;"/>GitHubでログイン</button></ul>
-                <ul><button style="width: 300px;" class="button" type="is-inline-dark" @click="AuthFacebook"><img src="https://img.icons8.com/fluent/48/000000/facebook-new.png" style="height: 15px;"/>Facebookでログイン</button></ul>
-                <ul><a @click="ChangeForm()">既にアカウントをお持ちの方</a></ul>
+                <ul><b-button style="width: 190px;" class="button" type="is-inline-dark" @click="passes(login)">Eメールでログイン</b-button></ul>
+                <ul><b-button style="width: 190px;" class="button" type="is-inline-dark" @click="AuthGoogle"><img src="https://img.icons8.com/color/48/000000/google-logo.png" style="height: 15px;">Googleでログイン</b-button></ul>
+                <ul><button style="width: 190px;" class="button" type="is-inline-dark" @click="AuthGithub"><img src="https://img.icons8.com/fluent/48/000000/github.png" style="height: 15px;"/>GitHubでログイン</button></ul>
+                <ul><button style="width: 190px;" class="button" type="is-inline-dark" @click="AuthFacebook"><img src="https://img.icons8.com/fluent/48/000000/facebook-new.png" style="height: 15px;"/>Facebookでログイン</button></ul>
+                <ul><a @click="ChangeForm()" style="font-size: 14px;">既にアカウントをお持ちの方</a></ul>
             </li>
         </footer>
         </section>

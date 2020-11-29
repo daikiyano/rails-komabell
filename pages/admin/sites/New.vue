@@ -106,15 +106,7 @@
             this.$axios.$post('/api/v1/admin/sites',formData,{ 
                 headers: {
                     'Content-Type': 'multipart/form-data'
-                } ,
-                // site : {
-                //     title : this.title,
-                //     description : this.description,
-                //     price : this.price,
-                //     difficultyLevel : this.difficultyLevel,
-                //     url : this.url,
-                //     environment : this.environment,
-                // }
+                } 
             })
             .then(response => {
                 this.$buefy.toast.open({
@@ -136,6 +128,31 @@
                 }
             })
             }
+            console.log(this.tags)
+        this.$axios.$post('/api/v1/admin/site_categories',{ 
+        site_category : {
+            skill_arrays : this.tags
+        }
+        })
+        .then(response => {
+            this.$buefy.toast.open({
+                duration: 5000,
+                message: '編集が完了しました',
+                type: 'is-success'
+            })
+            console.log(response)
+        })
+        .catch ( error => {
+            if (error.response.status == "401" || error.response.status == "500" || error.response.status == "422") {
+                console.log(error)
+                // this.error = "Tokenが無効です"
+                this.$buefy.toast.open({
+                    duration: 5000,
+                    message: 'サーバー内で問題が発生しました',
+                    type: 'is-danger'
+                })
+             }
+        })
     },
     FetchCategories () {
         this.$axios.$get('/api/v1/fetch_categories')
@@ -180,6 +197,33 @@
         }
         }
      },
+     CreateMySkills() {
+        this.$axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.idToken}`    
+        this.$axios.$post('/api/v1/admin/site_categories',{ 
+            user_skill_category : {
+                skill_arrays : this.tag
+            }
+        })
+        .then(response => {
+            this.$buefy.toast.open({
+                duration: 5000,
+                message: '編集が完了しました',
+                type: 'is-success'
+            })
+            console.log(response)
+        })
+        .catch ( error => {
+            if (error.response.status == "401" || error.response.status == "500" || error.response.status == "422") {
+                console.log("tokenが無効です")
+                // this.error = "Tokenが無効です"
+                this.$buefy.toast.open({
+                    duration: 5000,
+                    message: 'サーバー内で問題が発生しました',
+                    type: 'is-danger'
+                })
+            }
+        })
+      },
     
   }
  }

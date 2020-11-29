@@ -1,20 +1,22 @@
-
 <template>
-  <div>
-    <h1>callback</h1>
-    <p>少々お待ち下さい</p>
-    
-  </div>
+    <div>
+       <img class="is-centered" src="@/assets/image/loading.png">
+    </div>
 </template>
 
 <script>
-export default {
-   middleware: {
-    routing: false
-   },
-
-
-}
+    export default {
+      middleware: {
+        routing: false
+      },
+        data() {
+            return {
+                isFullPage: true,
+            }
+        },
+        
+        
+    }
 </script>
 
 

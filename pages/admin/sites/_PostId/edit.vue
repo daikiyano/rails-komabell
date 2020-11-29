@@ -41,6 +41,7 @@
             vid="description"
             v-model="description"
         />
+         
         <b-field class="file is-primary" :class="{'has-name': !!file}">
         <b-upload v-model="file" class="file-label">
             <span class="file-cta">
@@ -52,9 +53,29 @@
             </span>
         </b-upload>
     </b-field>
-        <button type="submit" @click="PatchSites()">学習サイト情報追加</button>
+    <b-button type="is-success" @click="PatchSites()" outlined>学習サイト情報追加</b-button>
+        <!-- <button type="submit" @click="PatchSites()">学習サイト情報追加</button> -->
     </form>
     </ValidationObserver>
+    <b-field>
+             <!-- :data="filteredTags" -->
+            <b-taginput
+            @remove="RemoveTag"
+                v-model="tags"
+               :data="filteredTags"
+                autocomplete
+                placeholder="学べる技術"
+                :allow-new="true"
+                field="tag_name"
+                icon="label"
+                 type="is-dark"
+                 @add="CheckExistTags"   
+                @typing="getFilteredTags">
+            </b-taginput>
+        </b-field>
+        <b-button type="is-success" @click="updateSiteTags()" outlined>学習サイトタグ追加</b-button>
+
+         <pre style="max-height: 400px"><b>スキルタグ配列チェックTags:</b>{{ tags }}</pre>
     </main>
   </div>
 </template>
@@ -81,11 +102,23 @@ import BSelectWithValidation from "~/components/Form/BSelectWithValidation.vue";
           difficultyLevel : "",
           url : "",
           environment : "",
-          file : null
+          file : null,
+          DeleteTags : [],
+            tags: [],
+            skills: null,
+            skill_tags : [],
+            CategoryIdList : [], 
+            filteredTags : [],
+            data:[],
+            IsUserSkills : false,
+            allowNew: false,
+            openOnFocus: false,
     }
     },
     created () {
         this.fetchSite()
+        this.FetchCategories()
+        this.FetchSiteTags()
     },
   methods: {
       fetchSite () {
@@ -104,8 +137,6 @@ import BSelectWithValidation from "~/components/Form/BSelectWithValidation.vue";
         this.url = res.data.url
         this.environment = res.data.environment
         this.file = res.image
-        
-
         })
     .catch ( error => {
       if (error.response.status == "404") {
@@ -117,6 +148,23 @@ import BSelectWithValidation from "~/components/Form/BSelectWithValidation.vue";
           })
       }
     })
+    },
+    FetchCategories () {
+        this.$axios.$get('/api/v1/fetch_categories')
+        .then(res => {
+            this.filteredTags = res.tag
+            this.data = res.tag       
+        })
+        .catch ( error => {
+            if (error.response.status == "401") {
+                console.log("tokenが無効です")
+                this.$buefy.toast.open({
+                    duration: 5000,
+                    message: 'サーバー内でも問題が発生しました',
+                    type: 'is-danger'
+                 })
+             }
+        })
     },
     PatchSites() {
         this.$axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.idToken}`
@@ -131,17 +179,6 @@ import BSelectWithValidation from "~/components/Form/BSelectWithValidation.vue";
 
             const id = this.$route.params.PostId
             this.$axios.$patch(`/api/v1/admin/sites/${id}`,formData,{ 
-                // headers: {
-                //     'Content-Type': 'multipart/form-data'
-                // } ,
-                // site : {
-                //     title : this.title,
-                //     description : this.description,
-                //     price : this.price,
-                //     difficultyLevel : this.difficultyLevel,
-                //     url : this.url,
-                //     environment : this.environment,
-                // }
             })
             .then(response => {
                 this.$buefy.toast.open({
@@ -162,8 +199,73 @@ import BSelectWithValidation from "~/components/Form/BSelectWithValidation.vue";
                     })
                 }
             })
+        
            
+        },
+        getFilteredTags(text) {
+        this.filteredTags = this.data.filter((option) => {
+            return option.tag_name
+            .toString()
+            .toLowerCase()
+            .indexOf(text.toLowerCase()) >= 0
+        })
+      },
+
+      updateSiteTags () {
+        const site_id = this.$route.params.PostId
+        this.$axios.$post('/api/v1/admin/site_categories',{ 
+        site_category : {
+            skill_arrays : this.tags,
+            site_id: site_id
         }
+        })
+        .then(response => {
+            this.$buefy.toast.open({
+                duration: 5000,
+                message: '編集が完了しました',
+                type: 'is-success'
+            })
+            console.log(response)
+        })
+        .catch ( error => {
+            if (error.response.status == "401" || error.response.status == "500" || error.response.status == "422") {
+                console.log(error)
+                // this.error = "Tokenが無効です"
+                this.$buefy.toast.open({
+                    duration: 5000,
+                    message: 'サーバー内で問題が発生しました',
+                    type: 'is-danger'
+                })
+             }
+        })
+      },
+      FetchSiteTags () {
+          const site_id = this.$route.params.PostId
+            this.$axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.idToken}`
+            this.$axios.$get(`/api/v1/admin/site_categories/${site_id}/edit`)
+            .then(res => {
+            // if (res.data.length === 0) {
+            //     this.IsUserSkills = false
+                
+            // } else {
+            //     this.IsUserSkills = true
+            // }
+             console.log(this.IsUserSkills)
+             this.tags = res.data
+            //  this.skill_tags = [[7,"iOS",1], [9,"Android",2]]
+             console.log()
+            })
+            .catch ( error => {
+                if (error.response.status == "401") {
+                    console.log("tokenが無効です")
+                    this.$buefy.toast.open({
+                        duration: 5000,
+                        message: 'サーバー内でも問題が発生しました',
+                        type: 'is-danger'
+                    })
+                }
+            })
+        },
      
     
   }
