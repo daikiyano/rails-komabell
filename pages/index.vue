@@ -5,7 +5,7 @@
   </div>
 
   <h1 class="title is-3 title-line">ProHubの特徴</h1>
-  <div class="content is-medium columns is-desktop">
+  <div class="content is-medium columns is-desktop Headline">
     <div class="column">
       <h1 class="title is-4 title-line" style="text-align: center;">ProHubとは</h1>
       <p style="padding: 30px; auto;">
@@ -393,6 +393,21 @@ text-align: center;
     margin: 8px auto 0 auto;
     background-color:#64bc6e;
    
+}
+.Headline{
+  animation: SlideIn 1.6s;
+}
+
+/* CSSアニメーションの設定 */
+@keyframes SlideIn {
+  0% {
+    opacity: 0;/*初期状態では透明に*/
+    transform: translateX(64px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 </style>
 
