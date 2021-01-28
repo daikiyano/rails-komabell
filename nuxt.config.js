@@ -44,7 +44,8 @@ export default {
     { src: '@/plugins/vue-croppie', mode: 'client'  },
     { src: '@/plugins/vee-validate' },
     { src: '~/plugins/star-rating.js', mode: 'client' },
-    {src: '@/plugins/mavon-editor', mode: 'client' }
+    {src: '@/plugins/mavon-editor', mode: 'client' },
+    '~/plugins/firebase.js'
     
   ],
 
