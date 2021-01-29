@@ -18,6 +18,8 @@
     <input type="email" placeholder="Email" v-model="email">
     <input type="password" placeholder="Password" v-model="password">
     <button @click="signUp">Register</button>
+    <button @click="signIn">ログイン</button>
+    <button @click="logOut">ログアウト</button>
     <div class="column">
       <img class="is-centered" src="@/assets/image/top2.png">
     </div>
@@ -138,7 +140,17 @@ export default {
       files: null,
       CheckUserLike: false,
       password: "",
+      tmpUser: null,
     };
+  },
+  mounted() {
+    firebase.auth().onAuthStateChanged(async (user) => {
+      if (user) {
+        console.log("%%%%%%%%", user.email);
+        // const res = await axios.get(`/v1/users?uid=${user.uid}`)
+        // this.user = res.data
+      }
+    });
   },
   created() {
     this.FetchSites();
@@ -400,6 +412,34 @@ export default {
         })
         .catch((error) => {
           alert(error.message);
+        });
+    },
+    signIn() {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(this.email, this.password)
+        .then(
+          (user) => {
+            alert(user.user.uid);
+            this.tmpUser = user;
+            this.$router.push("/");
+          },
+          (err) => {
+            alert(err.message);
+          }
+        );
+    },
+    logOut() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          alert("logout seccessful!");
+          window.location.href = "/";
+        })
+        .catch((e) => {
+          console.log(e);
+          console.log("an error happened");
         });
     },
   },
