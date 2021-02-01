@@ -146,7 +146,7 @@ export default {
   mounted() {
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
-        console.log("%%%%%%%%", user.email);
+        console.log("%%%%%%%%", user.uid);
         // const res = await axios.get(`/v1/users?uid=${user.uid}`)
         // this.user = res.data
       }
@@ -407,11 +407,32 @@ export default {
         .auth()
         .createUserWithEmailAndPassword(this.email, this.password)
         .then((user) => {
-          alert("Create account!");
+          this.test(user);
           console.log(user);
         })
         .catch((error) => {
           alert(error.message);
+        });
+    },
+
+    test(user) {
+      console.log(user.user.uid);
+      // const token = firebase.auth().currentUser;
+      const data = { token: user.user.uid };
+      console.log("datatdatatatta");
+      console.log(data);
+      this.$axios
+        .$post("/api/v1/create", data)
+        .then(() => {
+          console.log("clrea");
+        })
+        .catch((error) => {
+          if (error.response) {
+            console.log(error.response);
+            this.errors = "メールアドレスは既に登録されています";
+          } else {
+            this.serverError = "サーバー内で問題が発生しました。";
+          }
         });
     },
     signIn() {
