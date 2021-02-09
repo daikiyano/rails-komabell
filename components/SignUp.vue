@@ -25,9 +25,10 @@
                     style="width: 300px"
                     class="button"
                     type="is-inline-dark"
-                    @click="passes(login)"
+                    @click="stepEmail()"
                     >Eメールで会員登録</b-button
                   >
+                  <!-- @click="passes(login)" -->
                 </ul>
                 <ul>
                   <b-button
@@ -78,17 +79,48 @@
       <div v-else-if="this.step === 2">
         <section class="modal-card-body">
           <header class="modal-card-head">
-            <p class="modal-card-title">確認メールを送信しました</p>
+            <p class="modal-card-title">メールアドレスで会員登録する</p>
           </header>
-          <p>
-            {{ email }}宛に確認メールを送信しました。<br />
-            15分以内に添付したリンクをクリックしてログインを完了させてください。
-          </p>
-          <footer class="modal-card-foot">
-            <button class="button" type="is-dark" @click="close()">
-              閉じる
-            </button>
-          </footer>
+          <ValidationObserver ref="observer" v-slot="{ passes }">
+            <EmailInput v-model="email" />
+            {{ email }}
+            {{ password }}
+            <ValidationProvider
+              rules="required"
+              vid="password"
+              name="Password"
+              v-slot="{ errors, valid }"
+            >
+              <b-field
+                :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                :message="errors"
+              >
+                <b-input type="password" v-model="password"></b-input>
+              </b-field>
+            </ValidationProvider>
+            <!-- <header class="modal-card-head"> -->
+            <!-- <p class="modal-card-title">確認メールを送信しました</p>
+            </header>
+            <p>
+              {{ email }}宛に確認メールを送信しました。<br />
+              15分以内に添付したリンクをクリックしてログインを完了させてください。
+            </p> -->
+            <li style="list-style: none; color: red; margin: 0 auto">
+              <!-- <li v-for="error in errors" :key="error"> -->
+              {{ errors }}
+              <!-- </li> -->
+              <ul>
+                {{
+                  serverError
+                }}
+              </ul>
+            </li>
+            <footer class="modal-card-foot">
+              <button class="button" type="is-dark" @click="passes(signUp)">
+                新規投稿
+              </button>
+            </footer>
+          </ValidationObserver>
         </section>
       </div>
     </div>
@@ -109,6 +141,7 @@ export default {
   data() {
     return {
       email: "",
+      password: "",
       errors: "",
       serverError: "",
       step: 1,
@@ -121,29 +154,29 @@ export default {
     ChangeForm() {
       this.$emit("ChangeForm", "Login");
     },
-    async login() {
+    async signUp() {
       // const isValid = await this.$refs.observer.validate()
 
-      if (this.email) {
-        await this.$axios
-          .$post("/api/v1/create", {
-            email: this.email,
-          })
-          .then((res) => {
-            console.log("clrea");
-            this.step = 2;
-            // }
-          })
-          .catch((error) => {
-            if (error.response.status == "422") {
-              console.log(error.response);
-              this.errors = "メールアドレスは既に登録されています";
-            } else {
-              this.serverError = "サーバー内で問題が発生しました。";
-              this.$refs.observer.reset();
-            }
-          });
-      }
+      // if (this.email) {
+      await this.$axios
+        .$post("/api/v1/check_exist_user", {
+          email: this.email,
+        })
+        .then((res) => {
+          console.log(res.exist_email);
+          this.step = 2;
+          // }
+        })
+        .catch((error) => {
+          if (error.response.status == "422") {
+            console.log(error.response);
+            this.errors = "メールアドレスは既に登録されています";
+          } else {
+            this.serverError = "サーバー内で問題が発生しました。";
+            this.$refs.observer.reset();
+          }
+        });
+      // }
     },
     AuthGoogle() {
       localStorage.setItem("auth_status", "signup");
@@ -162,8 +195,10 @@ export default {
     },
     Status() {
       console.log("hey");
-
       console.log(this.$store.state.auth_method.status);
+    },
+    stepEmail() {
+      this.step = 2;
     },
   },
 };

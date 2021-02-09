@@ -141,12 +141,17 @@ export default {
       CheckUserLike: false,
       password: "",
       tmpUser: null,
+      jwt: null,
     };
   },
-  mounted() {
+  async mounted() {
+    let self = this;
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
-        console.log("%%%%%%%%", user.uid);
+        user.getIdToken().then(function (data) {
+          console.log(data);
+          self.jwt = data;
+        });
         // const res = await axios.get(`/v1/users?uid=${user.uid}`)
         // this.user = res.data
       }
@@ -349,7 +354,7 @@ export default {
     FetchSites() {
       this.$axios.defaults.headers.common[
         "Authorization"
-      ] = `Bearer ${localStorage.idToken}`;
+      ] = `Bearer ${this.jwt}`;
       this.$axios
         .$get("/api/v1/sites")
         .then((res) => {
@@ -415,25 +420,25 @@ export default {
         });
     },
 
-    test(user) {
+    async test(user) {
       console.log(user.user.uid);
-      // const token = firebase.auth().currentUser;
-      const data = { token: user.user.uid };
-      console.log("datatdatatatta");
-      console.log(data);
-      this.$axios
-        .$post("/api/v1/create", data)
-        .then(() => {
-          console.log("clrea");
-        })
-        .catch((error) => {
-          if (error.response) {
-            console.log(error.response);
-            this.errors = "メールアドレスは既に登録されています";
-          } else {
-            this.serverError = "サーバー内で問題が発生しました。";
-          }
-        });
+
+      const idToken = await firebase.auth().currentUser.getIdToken();
+      localStorage.setItem("token", idToken);
+      console.log(idToken);
+      // this.$axios
+      //   .$post("/api/v1/create", data)
+      //   .then(() => {
+      //     console.log("clrea");
+      //   })
+      //   .catch((error) => {
+      //     if (error.response) {
+      //       console.log(error.response);
+      //       this.errors = "メールアドレスは既に登録されています";
+      //     } else {
+      //       this.serverError = "サーバー内で問題が発生しました。";
+      //     }
+      //   });
     },
     signIn() {
       firebase
@@ -441,6 +446,7 @@ export default {
         .signInWithEmailAndPassword(this.email, this.password)
         .then(
           (user) => {
+            this.test(user);
             alert(user.user.uid);
             this.tmpUser = user;
             this.$router.push("/");
