@@ -7,7 +7,7 @@
       <article class="media">
         <div class="media-left">
           <figure class="image is-64x64">
-            <img class="is-rounded" :src="image" alt="Image" />
+            <img class="is-rounded" :src="user.image_url" alt="Image" />
           </figure>
           <b-button class="button" type="is-dark" @click="OpenModal"
             >アップロード</b-button
@@ -176,7 +176,7 @@ import ImageUploadWithValidation from "~/components/Form/ImageUploadWithValidati
 import * as firebase from "@/plugins/firebase";
 
 export default {
-  middleware: "auth",
+  // middleware: "auth",
   components: {
     MyPageTab,
     Modal,
@@ -227,14 +227,14 @@ export default {
   methods: {
     // ユーザー情報取得
     async fetchUser() {
-      console.log(token);
       const ret = await this.$axios
         .$get("/api/v1/auto_login", {
           headers: { Authorization: `Bearer ${this.jwt}` },
         })
         .then((response) => {
           console.log(response);
-          this.user = response.user;
+          console.log("auto login");
+          this.user = response;
           this.image = response.image;
         });
     },

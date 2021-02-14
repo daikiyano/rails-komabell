@@ -11,11 +11,7 @@
         <b-navbar-item href="#"> About </b-navbar-item>
         <b-navbar-dropdown label="Info">
           <b-navbar-item href="#"> About </b-navbar-item>
-          <nuxt-link
-            to="/users/bookshelf"
-            class="navbar-item"
-            v-if="this.$auth.loggedIn"
-          >
+          <nuxt-link to="/users/bookshelf" class="navbar-item" v-if="user">
             マイ本棚
           </nuxt-link>
         </b-navbar-dropdown>
@@ -23,11 +19,7 @@
       <template slot="end">
         <b-navbar-item tag="div">
           <div class="buttons">
-            <nuxt-link
-              to="/users/mypage"
-              class="navbar-item"
-              v-if="this.$auth.loggedIn"
-            >
+            <nuxt-link to="/users/mypage" class="navbar-item" v-if="user">
               マイページ
             </nuxt-link>
             <a
@@ -36,7 +28,7 @@
                 FormComponent = 'SignUp';
               "
               class="navbar-item"
-              v-if="!this.$auth.loggedIn"
+              v-if="user === null"
             >
               会員登録
             </a>
@@ -46,15 +38,11 @@
                 FormComponent = 'Login';
               "
               class="navbar-item"
-              v-if="!this.$auth.loggedIn"
+              v-if="user === null"
             >
               ログイン
             </a>
-            <a
-              href="#"
-              class="navbar-item"
-              v-if="this.$auth.loggedIn"
-              @click="logout()"
+            <a href="#" class="navbar-item" v-if="user" @click="logOut()"
               >ログアウト</a
             >
           </div>
@@ -107,10 +95,18 @@ export default {
     return {
       isModalForm: false,
       FormComponent: "",
+      user: null,
     };
   },
   created() {
     this.Auth();
+    let self = this;
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        console.log(user);
+        self.user = user;
+      }
+    });
   },
   methods: {
     closeModal() {
@@ -120,7 +116,7 @@ export default {
       console.log(FormComponent);
       this.FormComponent = FormComponent;
     },
-    logout() {
+    logOut() {
       firebase
         .auth()
         .signOut()

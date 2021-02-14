@@ -7,7 +7,7 @@
             <header class="modal-card-head">
               <p class="modal-card-title">メールアドレスで会員登録する</p>
             </header>
-            <EmailInput v-model="email" />
+            <!-- <EmailInput v-model="email" /> -->
             <li style="list-style: none; color: red; margin: 0 auto">
               <!-- <li v-for="error in errors" :key="error"> -->
               {{ errors }}
@@ -83,8 +83,7 @@
           </header>
           <ValidationObserver ref="observer" v-slot="{ passes }">
             <EmailInput v-model="email" />
-            {{ email }}
-            {{ password }}
+
             <ValidationProvider
               rules="required"
               vid="password"
@@ -130,6 +129,7 @@
 <script>
 import EmailInput from "~/components/Form/EmailInput.vue";
 import { ValidationObserver, ValidationProvider } from "vee-validate";
+import * as firebase from "@/plugins/firebase";
 
 export default {
   name: "SignUp",
@@ -145,6 +145,7 @@ export default {
       errors: "",
       serverError: "",
       step: 1,
+      exist_user: true,
     };
   },
   methods: {
@@ -163,9 +164,8 @@ export default {
           email: this.email,
         })
         .then((res) => {
-          console.log(res.exist_email);
-          this.step = 2;
-          // }
+          console.log(res.exist_user);
+          this.exist_user = res.exist_user;
         })
         .catch((error) => {
           if (error.response.status == "422") {
@@ -176,6 +176,34 @@ export default {
             this.$refs.observer.reset();
           }
         });
+
+      if (this.exist_user) {
+        this.errors = "メールアドレスは既に登録されています";
+        return;
+      } else {
+        await this.$axios
+          .$post("/api/v1/create", {
+            email: this.email,
+          })
+          .then((res) => {
+            console.log(res);
+            firebase
+              .auth()
+              .createUserWithEmailAndPassword(this.email, this.password)
+              .then((user) => {
+                console.log(user);
+                this.$emit("isCloseModal", false);
+                this.$buefy.toast.open({
+                  duration: 5000,
+                  message: "会員登録に成功しました",
+                  type: "is-success",
+                });
+              })
+              .catch((error) => {
+                alert(error.message);
+              });
+          });
+      }
       // }
     },
     AuthGoogle() {

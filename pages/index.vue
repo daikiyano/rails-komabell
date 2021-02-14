@@ -15,11 +15,11 @@
       </p>
     </div>
 <h2>Sign up</h2>
-    <input type="email" placeholder="Email" v-model="email">
+    <!-- <input type="email" placeholder="Email" v-model="email">
     <input type="password" placeholder="Password" v-model="password">
     <button @click="signUp">Register</button>
     <button @click="signIn">ログイン</button>
-    <button @click="logOut">ログアウト</button>
+    <button @click="logOut">ログアウト</button> -->
     <div class="column">
       <img class="is-centered" src="@/assets/image/top2.png">
     </div>
@@ -426,19 +426,6 @@ export default {
       const idToken = await firebase.auth().currentUser.getIdToken();
       localStorage.setItem("token", idToken);
       console.log(idToken);
-      // this.$axios
-      //   .$post("/api/v1/create", data)
-      //   .then(() => {
-      //     console.log("clrea");
-      //   })
-      //   .catch((error) => {
-      //     if (error.response) {
-      //       console.log(error.response);
-      //       this.errors = "メールアドレスは既に登録されています";
-      //     } else {
-      //       this.serverError = "サーバー内で問題が発生しました。";
-      //     }
-      //   });
     },
     signIn() {
       firebase

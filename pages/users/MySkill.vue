@@ -62,7 +62,7 @@ import MyPageTab from "~/components/users/MyPageTab.vue";
 import * as firebase from "@/plugins/firebase";
 
 export default {
-  middleware: "auth",
+  // middleware: "auth",
   components: {
     MyPageTab,
   },
